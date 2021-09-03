@@ -293,6 +293,13 @@
     remark "^13.0.0"
     unist-util-find-all-after "^3.0.2"
 
+"@types/casperjs@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/casperjs/-/casperjs-1.1.2.tgz#d0e0f2a6d6b90d69db9a80d9b1e013ed6c797ea2"
+  integrity sha512-3+0CY1lJR+CUBwxsZ9L1D9UtzOdsxe2h4XuzkdLvIxpixUcsQu7qRgx7azxDxBLImiTb0yZwk/AZdsJjYqD0PQ==
+  dependencies:
+    "@types/phantomjs" "*"
+
 "@types/eslint-scope@^3.7.0":
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.1.tgz"
@@ -345,6 +352,11 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/phantomjs@*":
+  version "1.9.31"
+  resolved "https://registry.yarnpkg.com/@types/phantomjs/-/phantomjs-1.9.31.tgz#5e772e25c5554bcbbb6895e62b73b5f2576a7a92"
+  integrity sha512-bUt5UvAozRMA6pzGmCRSw7iAqSnlepvzlfZKAkbAoZ+d5gxYJtQ9Jxq1Y6rVhyXbGcfDEm1OoOPR9QWom2UuEg==
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"
@@ -848,6 +860,11 @@ caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001251:
   version "1.0.30001252"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001252.tgz"
   integrity sha512-I56jhWDGMtdILQORdusxBOH+Nl/KgQSdDmpJezYddnAkVOmnoU8zwjTV9xAjMIYxr0iPreEAVylCGcmHCjfaOw==
+
+casperjs@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/casperjs/-/casperjs-1.1.4.tgz#eb01f4ed85ac520a8f4d932b4daa74d3e77bc746"
+  integrity sha1-6wH07YWsUgqPTZMrTap00+d7x0Y=
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
@@ -1815,9 +1832,9 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-husky@^7.0.2:
+husky@^7.0.0:
   version "7.0.2"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.2.tgz#21900da0f30199acca43a46c043c4ad84ae88dff"
   integrity sha512-8yKEWNX4z2YsofXAMT7KvA1g8p+GxtB1ffV8XtpAEGuXNAbCV5wdNKH+qTpw8SM9fh4aMPDR+yQuKfgnreyZlg==
 
 iconv-lite@^0.4.24:

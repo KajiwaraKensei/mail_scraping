@@ -2,6 +2,7 @@ import Nightmare from "nightmare";
 
 import { LoginZenlogic } from "./login/LoginZenlogic";
 import { GetEmailList, EmailList } from "./mail/GetEmailList";
+import { SaveEmailList } from "./mail/SaveEmailList";
 import { GetMailingList } from "./mailingList/GetMailingList";
 import { LoadMailingList } from "./mailingList/LoadMailngList";
 import { SaveMailingList } from "./mailingList/SaveMailingList";
@@ -24,8 +25,10 @@ export const MailingList = async () => {
 
   const result: { [s: string]: EmailList } = {};
   for (const mail of mailingList) {
-    //result[mail.mail] = await GetEmailList(mail.link)(n);
+    result[mail.mail] = await GetEmailList(mail.link)(n);
   }
+  void SaveEmailList(result);
+
   Object.keys(result).forEach((key) => {
     console.table(result[key]);
   });

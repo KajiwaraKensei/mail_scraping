@@ -2,6 +2,14 @@ import { MailingList } from "./GetMailingList";
 
 import { saveCSV } from "~/util/csv";
 
+const FILE_NAME = "csv/mailing_list.csv";
+
+/**
+ * メーリングリストをcsvに保存
+ * @module delay
+ * @param fileName 保存するファイル名
+ * @param data 保存データ
+ */
 export const SaveMailingList = (mailingList: MailingList) => {
   const saveData: string[][] = [
     ["メーリングリストアドレス", "コメント", "設定リンク"],
@@ -9,5 +17,5 @@ export const SaveMailingList = (mailingList: MailingList) => {
   mailingList.forEach((mail) => {
     saveData.push([mail.mail, mail.comment, mail.link]);
   });
-  return saveCSV(saveData, "mailing_list.csv");
+  return saveCSV(saveData, FILE_NAME);
 };

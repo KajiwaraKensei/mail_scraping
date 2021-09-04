@@ -1,4 +1,5 @@
 import Readline from "readline";
+
 /**
  * 指定秒待ちます
  * @module delay

@@ -1,44 +1,21 @@
 import Nightmare from "nightmare";
-const ZENLOGIC_USERNAME = "icraft-jp";
-const ZENLOGIC_PASSWORD = "~%XQzU2$WptL*|EUee_9";
+import { GetEmailList, EmailList } from "./mail/GetEmailList";
+import { GetMailingList } from "./mailingList/GetMailingList";
+import { LoginZenlogic } from "./login/LoginZenlogic";
+import { SaveMailingList } from "./mailingList/SaveMailingList";
 
 export const MailingList = async () => {
   const n = new Nightmare({ show: true });
+  await LoginZenlogic()(n); // ログイン
 
-  const mailingList = await n
-    .goto("https://my.zenlogic.jp/")
-    .type("input[id=account_username]", ZENLOGIC_USERNAME)
-    .type("input[id=account_password]", ZENLOGIC_PASSWORD)
-    .click("input[data-disable-with=ログイン]")
-    .wait("a[href='/configurations/68698']")
-    .goto("https://my.zenlogic.jp/configurations/68698/mail/mailing_lists")
-    .wait("#limit")
-    .select("#limit", "100")
-    .wait(3000)
-    .evaluate(() => {
-      const data: { mail: string; link: string; comment: string }[] = [];
-      const emailList = document.querySelectorAll(
-        "#data-list td:nth-child(2) .punycode-email"
-      )!;
-      const settingLink = document.querySelectorAll(
-        "#data-list td:nth-child(5) a"
-      );
+  const mailingList = await GetMailingList(n); // メーリングリスト一覧を取得
+  SaveMailingList(mailingList);
 
-      const commentList = document.querySelectorAll(
-        "#data-list td:nth-child(4)"
-      );
-
-      emailList.forEach((_, index) => {
-        console.log(index);
-
-        data.push({
-          link: settingLink[index]?.getAttribute("href")!,
-          comment: commentList[index]?.textContent!,
-          mail: emailList[index]?.textContent!,
-        });
-      });
-      return data;
-    });
-
-  console.table(mailingList);
+  let result: { [s: string]: EmailList } = {};
+  for (const mail of mailingList) {
+    //result[mail.mail] = await GetEmailList(mail.link)(n);
+  }
+  Object.keys(result).forEach((key) => {
+    console.table(result[key]);
+  });
 };

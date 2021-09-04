@@ -1,5 +1,6 @@
-import { LoadCSV } from "~/util/csv";
 import { MailingList } from "./GetMailingList";
+
+import { LoadCSV } from "~/util/csv";
 
 const FILE_NAME = "mailing_list.csv";
 

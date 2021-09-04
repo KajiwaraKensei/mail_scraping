@@ -16,7 +16,7 @@ export type MailingList = {
  * @param n
  * @returns メーリングリスト
  */
-export async function GetMailingList(n: Nightmare) {
+export async function GetMailingList(n: Nightmare): Promise<MailingList> {
   await n
     .goto(BASE_URL) // メーリングリストのページに移動
     .wait("#limit");
@@ -42,7 +42,8 @@ const getPageCount = (n: Nightmare) => {
     .select("#limit", String(PAGE_LIMIT)) // 100件表示に切り替え
     .wait(3000)
     .evaluate(() => {
-      const target = document.querySelectorAll(".mb10 .pagination > ul") || [];
+      const target: any =
+        document.querySelectorAll(".mb10 .pagination > ul") || [];
       const count = target[0].childElementCount;
 
       // １ページだけの場合
@@ -51,9 +52,7 @@ const getPageCount = (n: Nightmare) => {
       }
 
       // 後ろから3番目のテキストを数字に変換
-      return Number(
-        target[0].children.item(count - 3)!.querySelector("a")!.text
-      );
+      return Number(target[0].children.item(count - 3).querySelector("a").text);
     })
     .then((c: number) => c);
 };
@@ -76,9 +75,10 @@ const getData =
         const data: MailingList = [];
 
         // Email取得
-        const emailList = document.querySelectorAll(
-          "#data-list td:nth-child(2) .punycode-email"
-        )!;
+        const emailList =
+          document.querySelectorAll(
+            "#data-list td:nth-child(2) .punycode-email"
+          ) || [];
 
         // 詳細へ移動するリンク取得
         const settingLink = document.querySelectorAll(

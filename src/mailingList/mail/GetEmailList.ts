@@ -23,9 +23,10 @@ export const GetEmailList =
         const commentList =
           document.querySelectorAll<HTMLInputElement>("#ml_members__comment") ||
           [];
-        const postList = document.querySelectorAll<HTMLInputElement>(
-          "input[name='ml[members][][post]']"
-        )!;
+        const postList =
+          document.querySelectorAll<HTMLInputElement>(
+            "input[name='ml[members][][post]']"
+          ) || [];
         const subscribeList =
           document.querySelectorAll<HTMLInputElement>(
             "input[name='ml[members][][subscribe]']"

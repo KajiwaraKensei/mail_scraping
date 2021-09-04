@@ -7,7 +7,7 @@ import { GetMailingList } from "./mailingList/GetMailingList";
 import { LoadMailingList } from "./mailingList/LoadMailngList";
 import { SaveMailingList } from "./mailingList/SaveMailingList";
 
-export const MailingList = async () => {
+export const MailingList = async (): Promise<void> => {
   const n = new Nightmare({ show: true });
 
   let mailingList = await LoadMailingList();
@@ -32,4 +32,5 @@ export const MailingList = async () => {
   Object.keys(result).forEach((key) => {
     console.table(result[key]);
   });
+  return;
 };

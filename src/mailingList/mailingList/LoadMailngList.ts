@@ -9,7 +9,7 @@ import { LoadCSV } from "~/util/csv";
  * @param fileName 保存するファイル名
  * @param data 保存データ
  */
-export const LoadMailingList = async () => {
+export const LoadMailingList = async (): Promise<MailingList> => {
   const list = await LoadCSV(MAILING_LIST_CSV, {
     from_line: 2,
   }).catch((err) => {

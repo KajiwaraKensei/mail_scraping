@@ -7,7 +7,7 @@ const LOGIN_CHECK = "a[href='/configurations/68698']";
 
 export const LoginZenlogic =
   (login: string = DOMAIN, selector: string = LOGIN_CHECK) =>
-  (n: Nightmare) => {
+  (n: Nightmare): Nightmare => {
     return n
       .goto(login) // サイトへ移動
       .type("input[id=account_username]", ZENLOGIC_USERNAME) // ユーザーID入力

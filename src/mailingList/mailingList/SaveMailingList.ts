@@ -10,7 +10,7 @@ const FILE_NAME = "csv/mailing_list.csv";
  * @param fileName 保存するファイル名
  * @param data 保存データ
  */
-export const SaveMailingList = (mailingList: MailingList) => {
+export const SaveMailingList = (mailingList: MailingList): Promise<void> => {
   const saveData: string[][] = [
     ["メーリングリストアドレス", "コメント", "設定リンク"],
   ];

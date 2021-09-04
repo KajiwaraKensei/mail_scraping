@@ -1,2 +1,2 @@
 import { MailingList } from "~/mailingList/index";
-MailingList();
+void MailingList();

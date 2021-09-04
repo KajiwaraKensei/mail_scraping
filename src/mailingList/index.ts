@@ -1,7 +1,8 @@
 import Nightmare from "nightmare";
+
+import { LoginZenlogic } from "./login/LoginZenlogic";
 import { GetEmailList, EmailList } from "./mail/GetEmailList";
 import { GetMailingList } from "./mailingList/GetMailingList";
-import { LoginZenlogic } from "./login/LoginZenlogic";
 import { SaveMailingList } from "./mailingList/SaveMailingList";
 
 export const MailingList = async () => {
@@ -9,9 +10,9 @@ export const MailingList = async () => {
   await LoginZenlogic()(n); // ログイン
 
   const mailingList = await GetMailingList(n); // メーリングリスト一覧を取得
-  SaveMailingList(mailingList);
+  void SaveMailingList(mailingList);
 
-  let result: { [s: string]: EmailList } = {};
+  const result: { [s: string]: EmailList } = {};
   for (const mail of mailingList) {
     //result[mail.mail] = await GetEmailList(mail.link)(n);
   }

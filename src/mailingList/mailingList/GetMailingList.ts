@@ -93,7 +93,7 @@ const getData =
         // 取得したデータをまとめる
         emailList.forEach((_, index) => {
           data.push({
-            link: DOMAIN + settingLink[index].getAttribute("href") || "",
+            link: DOMAIN + (settingLink[index].getAttribute("href") || ""),
             comment: commentList[index].textContent || "",
             mail: emailList[index].textContent || "",
           });

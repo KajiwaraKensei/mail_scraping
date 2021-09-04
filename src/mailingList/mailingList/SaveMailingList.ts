@@ -1,5 +1,6 @@
-import { saveCSV } from "~/util/csv";
 import { MailingList } from "./GetMailingList";
+
+import { saveCSV } from "~/util/csv";
 
 export const SaveMailingList = (mailingList: MailingList) => {
   const saveData: string[][] = [

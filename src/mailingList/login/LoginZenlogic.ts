@@ -1,4 +1,5 @@
 import Nightmare from "nightmare";
+
 const DOMAIN = "https://my.zenlogic.jp/";
 const ZENLOGIC_USERNAME = "icraft-jp";
 const ZENLOGIC_PASSWORD = "~%XQzU2$WptL*|EUee_9";

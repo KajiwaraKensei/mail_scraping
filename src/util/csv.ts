@@ -17,9 +17,41 @@ export function saveCSV(saveData: string[][], fileName: string) {
         return;
       }
       saveFile(fileName, data).then(resolve).catch(reject);
+      console.log("saved!");
 
       return;
     });
+  });
+}
+
+/**
+ * csvロード
+ * @module LoadCSV
+ * @param fileName 読み込むファイル名
+ * @param option オプション
+ * @returns csvを２次元配列に変換したデータ
+ */
+export function LoadCSV(fileName: string, option?: parse.Options) {
+  return new Promise<string[][]>((resolve, reject) => {
+    const stream = fs.createReadStream(fileName);
+    stream.on("error", reject);
+    stream.pipe(
+      parse(
+        {
+          from_line: 1,
+          ...option,
+        },
+        (error, data) => {
+          console.log("reading");
+
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve(data);
+        }
+      )
+    );
   });
 }
 

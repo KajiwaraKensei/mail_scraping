@@ -1,8 +1,8 @@
 import Nightmare from "nightmare";
 
 const DOMAIN = "https://my.zenlogic.jp/";
-const ZENLOGIC_USERNAME = "icraft-jp";
-const ZENLOGIC_PASSWORD = "~%XQzU2$WptL*|EUee_9";
+const ZENLOGIC_USERNAME = process.env.USER_ID || "";
+const ZENLOGIC_PASSWORD = process.env.PASSWORD || "";
 const LOGIN_CHECK = "a[href='/configurations/68698']";
 
 export const LoginZenlogic =

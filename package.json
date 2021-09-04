@@ -9,10 +9,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "prettier --write"
     ],
     "*.{css,less,sass,scss}": [
-      "stylelint --fix"
     ]
   },
   "repository": {

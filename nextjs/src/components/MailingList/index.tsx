@@ -3,25 +3,31 @@ import React from "react";
 import styled from "styled-components";
 import useMailingListAddress from "~/hook/useMailingListAddress";
 const Home: NextPage = () => {
-  const { mailingList, loading } = useMailingListAddress();
+  const { mailingList, loading, fn } = useMailingListAddress();
 
   const mapMailingAddress = mailingList.map((mail) => (
-    <li key={"h_mailing_list_address_" + mail.mail}>
-      {mail.mail} : {mail.comment}
-    </li>
+    <tr key={"h_mailing_list_address_" + mail.mail}>
+      <td>{mail.mail}</td>
+      <td>{mail.comment}</td>
+    </tr>
   ));
   return (
-    <div>
-      <Title>Hello World!!</Title>
-      <div>
-        <div>{loading.loading ? "通信中" : "取得済み"}</div>
-        <div>{loading.isError && "エラー"}</div>
-        <ul>{mapMailingAddress}</ul>
-      </div>
-    </div>
+    <>
+      <button disabled={loading.loading} onClick={fn.MailingListRefresh}>
+        リフレッシュ
+      </button>
+      <div>{loading.loading ? "通信中" : ""}</div>
+      <Table>
+        <tbody>{mapMailingAddress}</tbody>
+      </Table>
+    </>
   );
 };
 
-const Title = styled.h1``;
+const Table = styled.table`
+  & td {
+    border: 1px solid;
+  }
+`;
 
 export default Home;

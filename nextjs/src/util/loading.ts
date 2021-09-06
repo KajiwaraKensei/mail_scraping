@@ -1,10 +1,10 @@
 export type Loading = {
-  loading: boolean | null;
+  loading: boolean | undefined;
   isError: boolean;
   message: string;
 };
 export const LoadingInit: Loading = {
-  loading: null,
+  loading: undefined,
   isError: false,
   message: "",
 };

@@ -42,8 +42,6 @@ export function LoadCSV(fileName: string, option?: parse.Options) {
           ...option,
         },
         (error, data) => {
-          console.log("reading");
-
           if (error) {
             reject(error);
             return;

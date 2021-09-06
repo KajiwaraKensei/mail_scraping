@@ -11,7 +11,6 @@ export const MailingList = async (): Promise<void> => {
   const n = new Nightmare({ show: true });
 
   let mailingList = await LoadMailingList();
-  console.log(mailingList);
 
   await LoginZenlogic()(n); // ログイン
 

@@ -1,4 +1,5 @@
 import Nightmare from "nightmare";
+import { LoginZenlogic } from "../login/LoginZenlogic";
 
 const PAGE_LIMIT = 100;
 const DOMAIN = "https://my.zenlogic.jp";
@@ -16,7 +17,12 @@ export type MailingList = {
  * @param n
  * @returns メーリングリスト
  */
-export async function GetMailingList(n: Nightmare): Promise<MailingList> {
+export async function GetMailingList(n?: Nightmare): Promise<MailingList> {
+  if (!n) {
+    // 引数にNightmareが入っていない場合は新しく作る
+    n = new Nightmare();
+    await LoginZenlogic()(n); // ログイン
+  }
   await n
     .goto(BASE_URL) // メーリングリストのページに移動
     .wait("#limit");

@@ -8,10 +8,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-    ],
-    "*.{css,less,sass,scss}": [
-    ]
+    "*.{js,jsx,ts,tsx}": [],
+    "*.{css,less,sass,scss}": []
   },
   "repository": {
     "type": "git",
@@ -23,8 +21,7 @@
     "url": "https://github.com/KajiwaraKensei/mail_scraping/issues"
   },
   "homepage": "https://github.com/KajiwaraKensei/mail_scraping#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "husky": "^7.0.0",
     "lint-staged": "^11.1.2",

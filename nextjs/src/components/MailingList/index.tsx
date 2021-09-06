@@ -16,7 +16,12 @@ const Home: NextPage = () => {
       <button disabled={loading.loading} onClick={fn.MailingListRefresh}>
         リフレッシュ
       </button>
+      <button disabled={loading.loading} onClick={fn.MailingListLoad}>
+        リロード
+      </button>
+
       <div>{loading.loading ? "通信中" : ""}</div>
+      <div>{loading.message.length ? loading.message : ""}</div>
       <Table>
         <tbody>{mapMailingAddress}</tbody>
       </Table>

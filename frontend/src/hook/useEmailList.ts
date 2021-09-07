@@ -5,8 +5,8 @@ import useLoading from "./useLoading";
 
 //_______________________________________________
 //　カスタムフック
-export const useMailingAddress = () => {
-  const [emailList, setEmailList] = React.useState<EmailListAll>();
+export const useEmailList = () => {
+  const [emailList, setEmailList] = React.useState<EmailListAll>({});
   const loading = useLoading();
   // メーリングリストアドレス取得
   React.useEffect(() => {
@@ -23,6 +23,8 @@ export const useMailingAddress = () => {
       .then((res) => {
         if (res.success === true) {
           loading.setLoadingSuccess("");
+          console.log(res);
+
           setEmailList(res.list);
         } else {
           loading.setLoadingFail(res.error);
@@ -39,4 +41,4 @@ export const useMailingAddress = () => {
   };
 };
 
-export default useMailingAddress;
+export default useEmailList;

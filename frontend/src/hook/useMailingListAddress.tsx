@@ -1,9 +1,9 @@
 import React from "react";
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 
-import { ResponseMailingListAddress } from "~/pages/api/mailing_list";
+import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 import { RefreshMailingListSocket } from "~/socket/client/mailingList";
 import GetMailingList from "~/util/api/GetMailingList";
+
 import useLoading from "./useLoading";
 //_______________________________________________
 //　カスタムフック

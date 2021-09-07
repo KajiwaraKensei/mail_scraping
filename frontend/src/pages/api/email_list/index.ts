@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { LoadMailingList } from "~/mailingList/mailingList/LoadMailngList";
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
+import { EmailListAll } from "~/mailingList/mail/GetEmailList";
+import { LoadEmailList } from "~/mailingList/mail/LoadEmailList";
 
 type Success = {
   success: true;
-  list: MailingList;
+  list: EmailListAll;
 };
 
 type Fail = {
@@ -12,14 +12,14 @@ type Fail = {
   error: any;
 };
 
-export type ResponseMailingListAddress = Success | Fail;
+export type ResponseEmailListAddress = Success | Fail;
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseMailingListAddress>
+  _: NextApiRequest,
+  res: NextApiResponse<ResponseEmailListAddress>
 ) {
   try {
-    const list = await LoadMailingList();
+    const list = await LoadEmailList();
 
     res.status(200).send({
       success: true,

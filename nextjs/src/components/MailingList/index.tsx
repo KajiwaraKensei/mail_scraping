@@ -1,10 +1,16 @@
+//_______________________________________________
+//
 import type { NextPage } from "next";
 import React from "react";
 import styled from "styled-components";
 import useMailingListAddress from "~/hook/useMailingListAddress";
-const Home: NextPage = () => {
+
+//_______________________________________________
+// component
+const Component: NextPage = () => {
   const { mailingList, loading, fn } = useMailingListAddress();
 
+  // メーリングリスト展開
   const mapMailingAddress = mailingList.map((mail) => (
     <tr key={"h_mailing_list_address_" + mail.mail}>
       <td>{mail.mail}</td>
@@ -29,10 +35,13 @@ const Home: NextPage = () => {
   );
 };
 
+//_______________________________________________
+// style
+
 const Table = styled.table`
   & td {
     border: 1px solid;
   }
 `;
 
-export default Home;
+export default Component;

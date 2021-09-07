@@ -1,23 +1,17 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIO } from "~/types/next";
-import { Server as ServerIO } from "socket.io";
+import { Server as IO_Server } from "socket.io";
 import { Server as NetServer } from "http";
 import RefreshMailingListSocket from "~/socket/server/RefreshMailingList";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (!res.socket.server.io) {
     console.log("New Socket.io server...");
-    // adapt Next's net Server to http Server
     const httpServer: NetServer = res.socket.server as any;
-    const io = new ServerIO(httpServer, {
+    const io = new IO_Server(httpServer, {
       path: "/api/socket",
     });
+
     io.on("connection", (socket) => {
       socket.on("refresh_mailing_list", RefreshMailingListSocket(socket));
     });

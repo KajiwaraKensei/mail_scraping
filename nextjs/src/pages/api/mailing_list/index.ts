@@ -11,6 +11,7 @@ type Fail = {
   success: false;
   error: any;
 };
+
 export type ResponseMailingListAddress = Success | Fail;
 
 export default async function handler(

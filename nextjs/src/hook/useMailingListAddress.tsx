@@ -1,73 +1,60 @@
 import React from "react";
 import { MailingList } from "~/mailingList/mailingList/GetMailingList";
-import {
-  finishLoading,
-  Loading,
-  LoadingInit,
-  ResetLoading,
-  setFailLoading,
-  setSuccessLoading,
-} from "~/util/loading";
-import { ResponseMailingListAddress } from "~/api/mailing_list/address_list";
-import { RefreshMailingListSocket } from "~/socket/client/mailingList";
 
+import { ResponseMailingListAddress } from "~/pages/api/mailing_list";
+import { RefreshMailingListSocket } from "~/socket/client/mailingList";
+import GetMailingList from "~/util/api/GetMailingList";
+import useLoading from "./useLoading";
 //_______________________________________________
 //　カスタムフック
 export const useMailingAddress = () => {
   const [mailingList, setMailingList] = React.useState<MailingList>([]);
-  const [loading, setLoading] = React.useState<Loading>(LoadingInit);
-
+  const loading = useLoading();
   // メーリングリストアドレス取得
   React.useEffect(() => {
     void MailingListLoad();
   }, []);
 
-  const setProcess = (process: string) => {
-    setLoading((p) => ({ ...p, message: process }));
-  };
-
+  /**
+   * メーリングリストを再取得する
+   * @module MailingListRefresh
+   */
   const MailingListRefresh = () => {
-    setLoading(ResetLoading()); // 通信開始
-    RefreshMailingListSocket(setProcess)
+    loading.setLoadingStart(); // 通信開始
+
+    RefreshMailingListSocket(loading.setLoadingMessage)
       .then((list) => {
         setMailingList(list);
-        setLoading(setSuccessLoading()); // 通信成功
+        loading.setLoadingSuccess("");
       })
-      .catch((e) => {
-        console.error(e);
-        setLoading(setFailLoading("データの取得に失敗しました。" + e));
-      })
-      .finally(() => {
-        setLoading(finishLoading); // 通信成功
-      });
+      .catch(loading.setLoadingSuccess)
+      .finally(loading.setLoadingFinish);
   };
 
+  /**
+   * メーリングリストをサーバーから取得する
+   * @module MailingListLoad
+   */
   const MailingListLoad = () => {
-    setLoading(ResetLoading()); // 通信開始
-    fetch("/api/mailing_list/address_list") // apiからデータを取得
-      .then((res) => res.json())
-      .then((data: ResponseMailingListAddress) => {
-        // 成功しているか？
-        if (data.success) {
-          setMailingList(data.list); // メーリングリストのアドレスを配列に入れる
-          setLoading(setSuccessLoading()); // 通信成功
+    loading.setLoadingStart();
+    GetMailingList()
+      .then((res) => {
+        if (res.success === true) {
+          loading.setLoadingSuccess("");
+          setMailingList(res.list);
         } else {
-          setLoading(
-            setFailLoading("データの取得に失敗しました。" + data.error)
-          ); // 通信失敗
+          loading.setLoadingFail(res.error);
         }
-        return;
       })
-      .catch((e) => {
-        console.error(e);
-        setLoading(setFailLoading("データの取得に失敗しました。" + e));
-      })
-      .finally(() => {
-        setLoading(finishLoading); // 通信成功
-      });
+      .catch(loading.setLoadingFail)
+      .finally(loading.setLoadingFinish);
   };
 
-  return { loading, mailingList, fn: { MailingListRefresh, MailingListLoad } };
+  return {
+    loading: loading.loading,
+    mailingList,
+    fn: { MailingListRefresh, MailingListLoad },
+  };
 };
 
 export default useMailingAddress;

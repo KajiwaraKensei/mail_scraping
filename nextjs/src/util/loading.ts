@@ -3,6 +3,7 @@ export type Loading = {
   isError: boolean;
   message: string;
 };
+
 export const LoadingInit: Loading = {
   loading: undefined,
   isError: false,
@@ -19,12 +20,12 @@ export const ResetLoading =
       isError: false,
     };
   };
+
 export const setSuccessLoading =
   (message?: string) =>
   (loading: Loading): Loading => {
     return {
       ...loading,
-      loading: false,
       message: message || "",
       isError: false,
     };
@@ -35,9 +36,8 @@ export const setFailLoading =
   (loading: Loading): Loading => {
     return {
       ...loading,
-      loading: false,
       message,
-      isError: false,
+      isError: true,
     };
   };
 

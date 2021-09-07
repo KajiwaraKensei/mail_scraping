@@ -1,4 +1,5 @@
 import Nightmare from "nightmare";
+import { LoginZenlogic } from "../login/LoginZenlogic";
 
 export type EmailList = {
   email: string;
@@ -6,12 +7,15 @@ export type EmailList = {
   post: boolean;
   subscribe: boolean;
 }[];
-
+export type EmailListAll = { [s: string]: EmailList };
 export const GetEmailList =
   (mailingLink: string) =>
-  async (n: Nightmare): Promise<EmailList> => {
-    console.log(mailingLink);
-
+  async (n?: Nightmare): Promise<EmailList> => {
+    if (!n) {
+      // 引数にNightmareが入っていない場合は新しく作る
+      n = new Nightmare();
+      await LoginZenlogic()(n); // ログイン
+    }
     await n.goto(mailingLink).wait(2500);
 
     return n

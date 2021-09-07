@@ -1,7 +1,14 @@
 import React from "react";
+import { EmailList } from "~/mailingList/mail/GetEmailList";
 
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
-import { RefreshMailingListSocket } from "~/socket/client/mailingList";
+import {
+  MailingList,
+  MailingListItem,
+} from "~/mailingList/mailingList/GetMailingList";
+import {
+  RefreshMailingListSocket,
+  RefreshMailListSocket,
+} from "~/socket/client/mailingList";
 import GetMailingList from "~/util/api/GetMailingList";
 
 import useLoading from "./useLoading";
@@ -27,7 +34,7 @@ export const useMailingAddress = () => {
         setMailingList(list);
         loading.setLoadingSuccess("");
       })
-      .catch(loading.setLoadingSuccess)
+      .catch(loading.setLoadingFail)
       .finally(loading.setLoadingFinish);
   };
 
@@ -50,10 +57,26 @@ export const useMailingAddress = () => {
       .finally(loading.setLoadingFinish);
   };
 
+  const MailRefresh = (mailingList: MailingList) => async () => {
+    loading.setLoadingStart(); // 通信開始
+
+    const mailList = await RefreshMailListSocket(
+      mailingList,
+      loading.setLoadingMessage
+    )
+      .then((list) => {
+        loading.setLoadingSuccess("");
+        return list;
+      })
+      .catch(loading.setLoadingFail)
+      .finally(loading.setLoadingFinish);
+
+    return mailList || {};
+  };
   return {
     loading: loading.loading,
     mailingList,
-    fn: { MailingListRefresh, MailingListLoad },
+    fn: { MailingListRefresh, MailingListLoad, MailRefresh },
   };
 };
 

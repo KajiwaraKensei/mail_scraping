@@ -1,5 +1,5 @@
 import React from "react";
-import { EmailListAll } from "~/mailingList/mail/GetEmailList";
+import { EmailList, EmailListAll } from "~/mailingList/mail/GetEmailList";
 import GetEmailList from "~/util/api/GetEmailList";
 import useLoading from "./useLoading";
 
@@ -34,9 +34,19 @@ export const useEmailList = () => {
       .finally(loading.setLoadingFinish);
   };
 
+  /**
+   * メールリストをサーバーから取得する
+   * @module EmailListLoad
+   */
+  const setEmailListItem = (key: string, item: EmailList) => {
+    setEmailList((n) => ({ ...n, [key]: item }));
+  };
+
   return {
     loading: loading.loading,
     emailList,
+    setEmailListItem,
+    setEmailList,
     fn: { EmailListLoad },
   };
 };

@@ -11,6 +11,12 @@ export type MailingList = {
   comment: string;
 }[];
 
+export type MailingListItem = {
+  mail: string;
+  link: string;
+  comment: string;
+};
+
 /**
  * メーリングリスト取得
  * @module GetMailingList

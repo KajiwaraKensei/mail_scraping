@@ -10,17 +10,21 @@ import {
 export const useLoading = () => {
   const [loading, setLoading] = useState(LoadingInit);
   const setLoadingStart = (message?: string) => {
+    console.log("start", message);
     setLoading(ResetLoading(message));
   };
   const setLoadingSuccess = (message: string) => {
+    console.log("success", message);
     setLoading(setSuccessLoading(message));
   };
 
   const setLoadingFail = (message: string) => {
+    console.log("fail", message);
     setLoading(setFailLoading(message));
   };
 
   const setLoadingFinish = () => {
+    console.log("finish");
     setLoading(finishLoading);
   };
 

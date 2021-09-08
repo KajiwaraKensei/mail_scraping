@@ -48,7 +48,11 @@ const Body = styled.div<{ loading: string }>`
     width: 90vw;
     min-height: 10rem;
     max-width: 20rem;
-    word-wrap: break-all;
+
+    & > div {
+      word-wrap: break-all;
+      word-break: break-all;
+    }
   }
 
   opacity: ${(p) => (p.loading == "true" ? "1" : "0")};

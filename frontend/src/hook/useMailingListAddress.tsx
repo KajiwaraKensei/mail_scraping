@@ -1,26 +1,25 @@
 import React from "react";
-import { EmailList } from "~/mailingList/mail/GetEmailList";
-
-import {
-  MailingList,
-  MailingListItem,
-} from "~/mailingList/mailingList/GetMailingList";
+import { MailingList } from "~/mailingList/mailingList/GetMailingList";
+import { StoreContext } from "~/pages/_app";
 import {
   RefreshMailingListSocket,
   RefreshMailListSocket,
 } from "~/socket/client/mailingList";
 import GetMailingList from "~/util/api/GetMailingList";
-
 import useLoading from "./useLoading";
 //_______________________________________________
 //　カスタムフック
 export const useMailingAddress = () => {
   const [mailingList, setMailingList] = React.useState<MailingList>([]);
   const loading = useLoading();
+  const { state } = React.useContext(StoreContext);
+
   // メーリングリストアドレス取得
   React.useEffect(() => {
-    void MailingListLoad();
-  }, []);
+    if (state.login.state === true) {
+      void MailingListLoad();
+    }
+  }, [state.login.state]);
 
   /**
    * メーリングリストを再取得する

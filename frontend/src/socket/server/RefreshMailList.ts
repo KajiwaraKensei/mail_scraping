@@ -7,14 +7,19 @@ import { SaveEmailList } from "~/mailingList/mail/SaveEmailList";
 import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 
 const Main = (socket: Socket) => async (_: MailingList) => {
+  const n = new Nightmare();
   try {
-    const n = new Nightmare();
     socket.emit("process", "ログイン中");
     void (await LoginZenlogic()(n));
     const allList = await LoadEmailList();
-
+    let count = 0;
+    const length = _.length;
     for (const mail of _) {
-      socket.emit("process", "メーリングリスト取得中 - " + mail.link);
+      count += 1;
+      socket.emit(
+        "process",
+        `メーリングリスト取得中(${count}/${length}) ${mail.link}`
+      );
       allList[mail.mail] = await GetEmailList(mail.link)(n);
     }
     socket.emit("process", "メーリングリスト保存中");
@@ -25,6 +30,7 @@ const Main = (socket: Socket) => async (_: MailingList) => {
     console.log(error);
 
     socket.emit("error", error);
+  } finally {
     socket.disconnect();
   }
 };

@@ -27,7 +27,7 @@ export const LoadEmailList = async (): Promise<EmailListAll> => {
       email: item[1] || "",
       comment: item[2] || "",
       post: item[3] === "1",
-      subscribe: item[4] === "3",
+      subscribe: item[4] === "1",
     });
   });
 

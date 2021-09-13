@@ -1,7 +1,7 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 
-import React, { FC, useReducer, createContext } from "react";
+import React, { useReducer, createContext } from "react";
 
 interface StateProps {
   login: {
@@ -56,9 +56,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     fetch("api/socket");
   }, []);
   return (
-    <StoreContext.Provider value={{ state, dispatch }}>
-      <Component {...pageProps} />
-    </StoreContext.Provider>
+    <>
+      <Head>
+        <title>mailing list</title>
+      </Head>
+      <StoreContext.Provider value={{ state, dispatch }}>
+        <Component {...pageProps} />
+      </StoreContext.Provider>
+    </>
   );
 }
 export default MyApp;

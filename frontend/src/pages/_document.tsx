@@ -4,7 +4,7 @@ export default class Document extends NextDocument {
   render() {
     return (
       <Html>
-        <Head>
+        <Head lang="ja">
           <meta charSet="utf-8" />
           <meta name="description" content="List of internal mailing lists" />
           <meta property="og:title" content="mailing list" />

@@ -5,7 +5,18 @@
   "main": "src/main.ts",
   "scripts": {
     "pre_commit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "install:node": "cd node && yarn",
+    "install:frontend": "cd frontend && yarn",
+    "install": "run-p install:*",
+    "start": "run-p start:*",
+    "start:frontend": "cd frontend && yarn start",
+    "start:node": "cd node && yarn start",
+    "build": "run-p build:*",
+    "build:node": "cd node && yarn build",
+		"build:frontend": "cd frontend && yarn build",
+    "dev": "run-p dev:*",
+		"dev:frontend": "cd frontend && yarn dev"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [],
@@ -25,6 +36,7 @@
   "devDependencies": {
     "husky": "^7.0.0",
     "lint-staged": "^11.1.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2"
   }
 }

@@ -46,7 +46,6 @@ async function getMailListSub(n: Nightmare, _: MailingList, socket: Socket) {
   const length = _.length; // 更新する件数
 
   for (const mail of _) {
-    count += 1;
     void socket.emit(
       "process",
       `メーリングリスト取得中(${++count}/${length}) ${mail.link}`

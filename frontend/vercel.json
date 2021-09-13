@@ -1,5 +1,0 @@
-{
-    "scripts": {
-      "build": "src build --output public"
-    }
-  }

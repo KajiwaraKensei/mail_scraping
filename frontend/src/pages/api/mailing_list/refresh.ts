@@ -1,10 +1,13 @@
+//_______________________________________________
+// メーリングリスト更新
 import type { NextApiRequest, NextApiResponse } from "next";
-import { LoadMailingList } from "~/mailingList/mailingList/LoadMailngList";
 import {
   GetMailingList,
   MailingList,
 } from "~/mailingList/mailingList/GetMailingList";
 
+//_______________________________________________
+// レスポンス
 type Success = {
   success: true;
   list: MailingList;
@@ -16,6 +19,8 @@ type Fail = {
 };
 export type ResponseMailingListAddressRefresh = Success | Fail;
 
+//_______________________________________________
+// メイン処理
 export default async function handler(
   _: NextApiRequest,
   res: NextApiResponse<ResponseMailingListAddressRefresh>
@@ -34,4 +39,5 @@ export default async function handler(
       error,
     });
   }
+  return;
 }

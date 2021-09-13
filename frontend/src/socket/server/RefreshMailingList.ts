@@ -4,6 +4,11 @@ import { LoginZenlogic } from "~/mailingList/login/LoginZenlogic";
 import { GetMailingList } from "~/mailingList/mailingList/GetMailingList";
 import { SaveMailingList } from "~/mailingList/mailingList/SaveMailingList";
 
+/**
+ * メーリングリストアドレス更新
+ * @module Main
+ * @param socket ソケット
+ */
 const Main = (socket: Socket) => async (_: string[]) => {
   const n = new Nightmare();
   socket.emit("process", "ログイン中");

@@ -1,13 +1,15 @@
+//_______________________________________________
+// メールリスト読み込み
 import { EmailListAll } from "./GetEmailList";
-
 import { MAIL_CSV } from "~/conf/mailingList";
 import { LoadCSV } from "~/util/csv";
 
+//_______________________________________________
+// メイン処理
+
 /**
- * メールのcsvを取得
- * @module LoadMailingList
- * @param fileName 保存するファイル名
- * @param data 保存データ
+ * メールリスト読み込み
+ * @returns 全てのメールリスト
  */
 export const LoadEmailList = async (): Promise<EmailListAll> => {
   const list = await LoadCSV(MAIL_CSV, {

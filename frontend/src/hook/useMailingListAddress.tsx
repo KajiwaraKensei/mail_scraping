@@ -1,3 +1,5 @@
+//_______________________________________________
+// メーリングリストhook
 import React from "react";
 import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 import { StoreContext } from "~/pages/_app";
@@ -7,6 +9,7 @@ import {
 } from "~/socket/client/mailingList";
 import GetMailingList from "~/util/api/GetMailingList";
 import useLoading from "./useLoading";
+
 //_______________________________________________
 //　カスタムフック
 export const useMailingAddress = () => {
@@ -56,7 +59,11 @@ export const useMailingAddress = () => {
       .finally(loading.setLoadingFinish);
   };
 
-  const MailRefresh = (mailingList: MailingList) => async () => {
+  /**
+   * メールリストを再取得
+   * @param mailingList メーリングリスト
+   */
+  const MailListRefresh = (mailingList: MailingList) => async () => {
     loading.setLoadingStart(); // 通信開始
 
     const mailList = await RefreshMailListSocket(
@@ -75,7 +82,7 @@ export const useMailingAddress = () => {
   return {
     loading: loading.loading,
     mailingList,
-    fn: { MailingListRefresh, MailingListLoad, MailRefresh },
+    fn: { MailingListRefresh, MailingListLoad, MailListRefresh },
   };
 };
 

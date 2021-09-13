@@ -1,5 +1,5 @@
 //_______________________________________________
-//
+// ログインページ
 import type { NextPage } from "next";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
@@ -10,6 +10,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { Paper, TextField } from "@material-ui/core";
 
 type Props = {};
+
 //_______________________________________________
 // component
 const Component: NextPage<Props> = () => {
@@ -18,9 +19,7 @@ const Component: NextPage<Props> = () => {
   const [userId, setUserId] = useState(state.login.userId);
   const [password, setPassword] = useState(state.login.password);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("submit");
     e.preventDefault();
-
     dispatch({
       type: "setLogin",
       payload: {
@@ -31,11 +30,13 @@ const Component: NextPage<Props> = () => {
       },
     });
   };
+
   const handleChangeInput =
     (key: "userId" | "password") =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       (key === "userId" ? setUserId : setPassword)(e.target.value);
     };
+
   return (
     <Body>
       <div>

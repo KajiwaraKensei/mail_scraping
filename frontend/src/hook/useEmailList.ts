@@ -1,10 +1,12 @@
+//_______________________________________________
+// メールリスト
 import React from "react";
 import { EmailList, EmailListAll } from "~/mailingList/mail/GetEmailList";
 import GetEmailList from "~/util/api/GetEmailList";
 import useLoading from "./useLoading";
 
 //_______________________________________________
-//　カスタムフック
+// カスタムフック
 export const useEmailList = () => {
   const [emailList, setEmailList] = React.useState<EmailListAll>({});
   const loading = useLoading();
@@ -23,8 +25,6 @@ export const useEmailList = () => {
       .then((res) => {
         if (res.success === true) {
           loading.setLoadingSuccess("");
-          console.log(res);
-
           setEmailList(res.list);
         } else {
           loading.setLoadingFail(res.error);
@@ -42,6 +42,11 @@ export const useEmailList = () => {
     setEmailList((n) => ({ ...n, [key]: item }));
   };
 
+  /**
+   * メールリストをcsv形式に変換
+   * @param list メールリスト
+   * @returns CSV形式のメールリスト
+   */
   const toCSV = (list: EmailListAll = emailList) => {
     const data: string[][] = [
       [

@@ -1,6 +1,10 @@
+//_______________________________________________
+// メーリングリストをスクレイピング
 import Nightmare from "nightmare";
 import { LoginZenlogic } from "../login/LoginZenlogic";
 
+//_______________________________________________
+// 定数
 const PAGE_LIMIT = 100;
 const DOMAIN = "https://my.zenlogic.jp";
 const BASE_URL = DOMAIN + "/configurations/68698/mail/mailing_lists";
@@ -16,6 +20,9 @@ export type MailingListItem = {
   link: string;
   comment: string;
 };
+
+//_______________________________________________
+// メイン処理
 
 /**
  * メーリングリスト取得

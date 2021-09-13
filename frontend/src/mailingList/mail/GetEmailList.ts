@@ -1,3 +1,5 @@
+//_______________________________________________
+// メールリスト取得
 import Nightmare from "nightmare";
 import { LoginZenlogic } from "../login/LoginZenlogic";
 
@@ -7,17 +9,30 @@ export type EmailList = {
   post: boolean;
   subscribe: boolean;
 }[];
+
+//_______________________________________________
+// メイン処理
 export type EmailListAll = { [s: string]: EmailList };
+
+/** メールリスト読み込み
+ * @param mailingLink 取得するメーリングリストのリンク
+ * @returns 全てのメールリスト
+ */
+
 export const GetEmailList =
   (mailingLink: string) =>
   async (n?: Nightmare): Promise<EmailList> => {
+    // ログイン
     if (!n) {
       // 引数にNightmareが入っていない場合は新しく作る
       n = new Nightmare();
       await LoginZenlogic()(n); // ログイン
     }
+
+    // メール一覧のページに移動
     await n.goto(mailingLink).wait(2500);
 
+    // 値取得
     return n
       .evaluate(() => {
         const data: EmailList = [];

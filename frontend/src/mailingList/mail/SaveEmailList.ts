@@ -1,7 +1,9 @@
-import { EmailList } from "./GetEmailList";
-
+//_______________________________________________
+// メールリスト保存
+import { EmailListAll } from "./GetEmailList";
 import { MAIL_CSV, MAIL_U_CSV } from "~/conf/mailingList";
 import { saveCSV } from "~/util/csv";
+
 const header: string[] = [
   "メーリングリストアドレス",
   "メールアドレス",
@@ -9,14 +11,14 @@ const header: string[] = [
   "投稿",
   "購読",
 ];
-type Props = {
-  [k: string]: EmailList;
-};
+type Props = EmailListAll;
+
+//_______________________________________________
+// メイン処理
+
 /**
- * メーリングリストをcsvに保存
- * @module delay
- * @param fileName 保存するファイル名
- * @param data 保存データ
+ * メールリスト保存
+ * @param mailList 保存するメールリスト
  */
 export const SaveEmailList = (mailList: Props): void => {
   void saveAll(mailList);
@@ -24,9 +26,16 @@ export const SaveEmailList = (mailList: Props): void => {
   return;
 };
 
+/**
+ * メールリスト保存処理
+ * @param mailList 保存するメールリスト
+ */
 export const saveAll = (mailList: Props): Promise<void> => {
   const saveData = [header];
+
+  // csv形式に変換
   Object.keys(mailList).forEach((mailingListAddress) => {
+    // key = mailing_list address name
     mailList[mailingListAddress].forEach((item) => {
       const { email, post, comment, subscribe } = item;
       saveData.push([
@@ -38,14 +47,21 @@ export const saveAll = (mailList: Props): Promise<void> => {
       ]);
     });
   });
+
   return saveCSV(saveData, MAIL_CSV);
 };
 
+/**
+ * ユーザー順に保存
+ * @param mailList 保存するメールリスト
+ */
 export const SaveEmailListSortUser = (mailList: Props): Promise<void> => {
   const saveData = [
     ["メールアドレス", "メーリングリストアドレス", "コメント", "投稿", "購読"],
   ];
   const userList: { [k: string]: string[][] } = {};
+
+  // ユーザー順のデータ作成
   Object.keys(mailList).forEach((mailingListAddress) => {
     mailList[mailingListAddress].forEach((item) => {
       const { email, post, comment, subscribe } = item;
@@ -61,8 +77,11 @@ export const SaveEmailListSortUser = (mailList: Props): Promise<void> => {
       ]);
     });
   });
+
+  // csv形式に変換
   Object.keys(userList).forEach((email) => {
     saveData.push(...userList[email]);
   });
+
   return saveCSV(saveData, MAIL_U_CSV);
 };

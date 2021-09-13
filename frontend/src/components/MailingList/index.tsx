@@ -1,5 +1,5 @@
 //_______________________________________________
-//
+// メーリングリスト一覧
 import type { NextPage } from "next";
 import React, { useContext } from "react";
 import styled from "styled-components";
@@ -23,6 +23,7 @@ import {
 import RefreshIcon from "@material-ui/icons/Refresh";
 import useCheckList from "~/hook/useCheckList";
 import { CSV_Download } from "~/util/CSV_Download";
+
 //_______________________________________________
 // component
 const Component: NextPage = () => {
@@ -31,16 +32,32 @@ const Component: NextPage = () => {
   const { emailList, setEmailList, fn: emailFn } = useEmailList();
   const { checkList, fn: checkFn } = useCheckList("mailing_list");
 
+  // CSVダウンロード
   const handleClickCSV = () => {
-    const selectItems = checkFn.checkData(emailList);
-    const csv = emailFn.toCSV(selectItems);
+    const selectItems = checkFn.checkData(emailList); // チェックしている項目を取得
+    const csv = emailFn.toCSV(selectItems); // CSVデータに変換
+
+    // ダウンロード
     CSV_Download(
       csv,
       "メーリングリスト_" + new Date().toLocaleDateString() + ".csv",
       "SJIS"
     );
   };
-  // メールアドレス表示
+
+  // メールリスト再読み込み
+  const MailRefresh = (mail: MailingListItem) => async () => {
+    const next = await fn.MailListRefresh([mail])();
+    setEmailList(next);
+  };
+
+  // 全てのメールリスト再読み込み
+  const AllRefresh = async () => {
+    const next = await fn.MailListRefresh(mailingList)();
+    setEmailList(next);
+  };
+
+  // メールリスト展開
   const mapMailList = (key: string) =>
     (emailList[key] || []).map((mail) => (
       <TableRow key={"mailing_list_" + key + "_" + mail.email}>
@@ -51,26 +68,13 @@ const Component: NextPage = () => {
       </TableRow>
     ));
 
-  const MailRefresh = (mail: MailingListItem) => async () => {
-    const next = await fn.MailRefresh([mail])();
-    setEmailList(next);
-  };
-
-  const AllRefresh = async () => {
-    const next = await fn.MailRefresh(mailingList)();
-    setEmailList(next);
-  };
-  const handleChangeCheckBox =
-    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      checkFn.changeCheckList(key, e.target.checked);
-    };
   // メーリングリスト展開
   const mapMailingAddress = mailingList.map((mail) => (
     <div key={"mailing_list_" + mail.mail} className="mail_table">
       <h3>
         <Checkbox
           checked={!!checkList[mail.mail]}
-          onChange={handleChangeCheckBox(mail.mail)}
+          onChange={checkFn.handleChangeCheckBox(mail.mail)}
           inputProps={{ "aria-label": "primary checkbox" }}
         />
         {mail.mail}
@@ -105,6 +109,7 @@ const Component: NextPage = () => {
       </TableContainer>
     </div>
   ));
+
   return (
     <Body>
       {state.login.state && <button onClick={AllRefresh}>全て更新</button>}
@@ -118,7 +123,6 @@ const Component: NextPage = () => {
           チェックを入れたのをダウンロード
         </button>
       )}
-
       {mapMailingAddress}
       {mailingList.length <= 0 && <div>データなし</div>}
       <Loading loading={loading} />

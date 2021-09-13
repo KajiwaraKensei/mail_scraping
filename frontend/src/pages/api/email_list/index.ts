@@ -1,7 +1,11 @@
+//_______________________________________________
+// メールリスト読み込み
 import type { NextApiRequest, NextApiResponse } from "next";
 import { EmailListAll } from "~/mailingList/mail/GetEmailList";
 import { LoadEmailList } from "~/mailingList/mail/LoadEmailList";
 
+//_______________________________________________
+// レスポンス
 type Success = {
   success: true;
   list: EmailListAll;
@@ -14,6 +18,8 @@ type Fail = {
 
 export type ResponseEmailListAddress = Success | Fail;
 
+//_______________________________________________
+// メイン処理
 export default async function handler(
   _: NextApiRequest,
   res: NextApiResponse<ResponseEmailListAddress>

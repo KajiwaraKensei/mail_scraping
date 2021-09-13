@@ -6,27 +6,56 @@ import { LoadEmailList } from "~/mailingList/mail/LoadEmailList";
 import { SaveEmailList } from "~/mailingList/mail/SaveEmailList";
 import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 
+/**
+ * メーリングリスト更新
+ * @module Main
+ * @param socket ソケット
+ */
 const Main = (socket: Socket) => async (_: MailingList) => {
+  const n = new Nightmare();
   try {
-    const n = new Nightmare();
     socket.emit("process", "ログイン中");
-    void (await LoginZenlogic()(n));
-    const allList = await LoadEmailList();
-
-    for (const mail of _) {
-      socket.emit("process", "メーリングリスト取得中 - " + mail.link);
-      allList[mail.mail] = await GetEmailList(mail.link)(n);
-    }
+    await LoginZenlogic()(n); // サイトにログイン
+    const allList = await getMailListSub(n, _, socket); // メールリスト取得
     socket.emit("process", "メーリングリスト保存中");
-    void (await SaveEmailList(allList));
-    socket.emit("complete", allList);
-    socket.disconnect();
+    await SaveEmailList(allList); // メールリスト保存
+    socket.emit("complete", allList); // 結果Return
+    socket.disconnect(); // 接続解除
   } catch (error) {
+    // エラー処理
     console.log(error);
-
     socket.emit("error", error);
+  } finally {
     socket.disconnect();
   }
+  return;
 };
+
+/**
+ * メーリングリスト取得
+ * @module getMailListSub
+ * @param n ログイン済みのNightmare
+ * @param _ 更新するメーリングリストの配列
+ * @param socket ソケット
+ * @returns 更新後のメーリングリスト
+ */
+async function getMailListSub(n: Nightmare, _: MailingList, socket: Socket) {
+  const allList = await LoadEmailList(); // 既存のメールリストを読み込み
+
+  let count = 0; // 何件目を取得しているかのカウント
+  const length = _.length; // 更新する件数
+
+  for (const mail of _) {
+    count += 1;
+    void socket.emit(
+      "process",
+      `メーリングリスト取得中(${++count}/${length}) ${mail.link}`
+    ); // 何件目を取得しているかのメッセージをクライアントに送信
+
+    // メールリストを取得して既存のリストを上書き
+    allList[mail.mail] = await GetEmailList(mail.link)(n);
+  }
+  return allList;
+}
 
 export default Main;

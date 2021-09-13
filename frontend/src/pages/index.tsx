@@ -11,7 +11,7 @@ const Home: NextPage = () => {
 };
 
 const Body = styled.div`
-  padding: 2rem;
+  padding: 1rem;
 `;
 
 export default Home;

@@ -1,5 +1,5 @@
 //_______________________________________________
-//
+// 通信中の画面
 import type { NextPage } from "next";
 import React from "react";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import { Loading } from "~/util/loading";
 type Props = {
   loading: Loading;
 };
+
 //_______________________________________________
 // component
 const Component: NextPage<Props> = (props) => {
@@ -23,7 +24,6 @@ const Component: NextPage<Props> = (props) => {
 
 //_______________________________________________
 // style
-
 const Body = styled.div<{ loading: string }>`
   position: fixed;
 
@@ -48,7 +48,11 @@ const Body = styled.div<{ loading: string }>`
     width: 90vw;
     min-height: 10rem;
     max-width: 20rem;
-    word-wrap: break-all;
+
+    & > div {
+      word-wrap: break-all;
+      word-break: break-all;
+    }
   }
 
   opacity: ${(p) => (p.loading == "true" ? "1" : "0")};

@@ -1,5 +1,6 @@
+//_______________________________________________
+// メールリストを取得するまでの一連の処理
 import Nightmare from "nightmare";
-
 import { LoginZenlogic } from "./login/LoginZenlogic";
 import { GetEmailList, EmailList } from "./mail/GetEmailList";
 import { SaveEmailList } from "./mail/SaveEmailList";
@@ -7,6 +8,8 @@ import { GetMailingList } from "./mailingList/GetMailingList";
 import { LoadMailingList } from "./mailingList/LoadMailngList";
 import { SaveMailingList } from "./mailingList/SaveMailingList";
 
+//_______________________________________________
+// メイン処理
 export const MailingList = async (): Promise<void> => {
   const n = new Nightmare({ show: true });
 

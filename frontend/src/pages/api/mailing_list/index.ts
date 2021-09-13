@@ -1,7 +1,11 @@
+//_______________________________________________
+// メーリングリスト取得
 import type { NextApiRequest, NextApiResponse } from "next";
 import { LoadMailingList } from "~/mailingList/mailingList/LoadMailngList";
 import { MailingList } from "~/mailingList/mailingList/GetMailingList";
 
+//_______________________________________________
+// レスポンスの型
 type Success = {
   success: true;
   list: MailingList;
@@ -14,6 +18,8 @@ type Fail = {
 
 export type ResponseMailingListAddress = Success | Fail;
 
+//_______________________________________________
+// メイン処理
 export default async function handler(
   _: NextApiRequest,
   res: NextApiResponse<ResponseMailingListAddress>

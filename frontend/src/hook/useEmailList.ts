@@ -42,12 +42,38 @@ export const useEmailList = () => {
     setEmailList((n) => ({ ...n, [key]: item }));
   };
 
+  const toCSV = (list: EmailListAll = emailList) => {
+    const data: string[][] = [
+      [
+        "メーリングリストアドレス",
+        "メールアドレス",
+        "コメント",
+        "投稿",
+        "購読",
+      ],
+    ];
+    Object.keys(list).forEach((mailingListAddress) => {
+      const mailList = list[mailingListAddress];
+      mailList.forEach(({ email, comment, post, subscribe }) => {
+        data.push([
+          mailingListAddress,
+          email,
+          comment,
+          post ? "1" : "0",
+          subscribe ? "1" : "0",
+        ]);
+      });
+    });
+
+    return data;
+  };
+
   return {
     loading: loading.loading,
     emailList,
     setEmailListItem,
     setEmailList,
-    fn: { EmailListLoad },
+    fn: { EmailListLoad, toCSV },
   };
 };
 

@@ -26,6 +26,7 @@ const Main = (socket: Socket) => async (_: MailingList) => {
     console.log(error);
     socket.emit("error", error);
   } finally {
+    n.end();
     socket.disconnect();
   }
   return;

@@ -13,9 +13,7 @@ export const RefreshMailingListSocket = (
   callback: (message: string) => void
 ) => {
   return new Promise<MailingList>((resolve, reject) => {
-    const socket = io("http://localhost:3000", {
-      path: "/api/socket",
-    });
+    const socket = io("/", { path: "/api/socket" });
 
     socket.on("connect", () => {
       socket.emit(REFRESH_MAILING_LIST);
@@ -39,9 +37,7 @@ export const RefreshMailListSocket = (
   callback: (message: string) => void
 ) => {
   return new Promise<EmailListAll>((resolve, reject) => {
-    const socket = io("http://localhost:3000", {
-      path: "/api/socket",
-    });
+    const socket = io("/", { path: "/api/socket" });
 
     socket.on("connect", () => {
       socket.emit(REFRESH_MAIL_LIST, mailingList);

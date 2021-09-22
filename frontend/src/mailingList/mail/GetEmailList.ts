@@ -29,6 +29,8 @@ export const GetEmailList =
       await LoginZenlogic()(n); // ログイン
     }
 
+    console.log(mailingLink);
+
     // メール一覧のページに移動
     await n.goto(mailingLink).wait(2500);
 

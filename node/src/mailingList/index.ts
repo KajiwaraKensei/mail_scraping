@@ -4,23 +4,15 @@ import { LoginZenlogic } from "./login/LoginZenlogic";
 import { GetEmailList, EmailList } from "./mail/GetEmailList";
 import { SaveEmailList } from "./mail/SaveEmailList";
 import { GetMailingList } from "./mailingList/GetMailingList";
-import { LoadMailingList } from "./mailingList/LoadMailngList";
 import { SaveMailingList } from "./mailingList/SaveMailingList";
 
 export const MailingList = async (): Promise<void> => {
-  const n = new Nightmare({ show: true });
+  console.log(1);
 
-  let mailingList = await LoadMailingList();
-  console.log(mailingList);
+  const n = new Nightmare({ show: false });
 
   await LoginZenlogic()(n); // ログイン
-
-  if (!mailingList.length) {
-    console.log("更新");
-
-    mailingList = await GetMailingList(n); // メーリングリスト一覧を取得
-  }
-
+  let mailingList = await GetMailingList(n); // メーリングリスト一覧を取得
   void SaveMailingList(mailingList);
 
   const result: { [s: string]: EmailList } = {};
@@ -29,8 +21,5 @@ export const MailingList = async (): Promise<void> => {
   }
   void SaveEmailList(result);
 
-  Object.keys(result).forEach((key) => {
-    console.table(result[key]);
-  });
   return;
 };

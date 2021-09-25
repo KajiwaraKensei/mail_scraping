@@ -1,9 +1,9 @@
 //_______________________________________________
 // サイトログイン
-import Nightmare from "nightmare";
+import { Page } from "puppeteer";
 
 const DOMAIN = "https://my.zenlogic.jp/";
-const ZENLOGIC_USERNAME = process.env.USER_ID || "ic";
+const ZENLOGIC_USERNAME = process.env.USER_ID || "";
 const ZENLOGIC_PASSWORD = process.env.PASSWORD || "";
 const LOGIN_CHECK = "a[href='/configurations/68698']";
 
@@ -16,16 +16,17 @@ const LOGIN_CHECK = "a[href='/configurations/68698']";
  */
 export const LoginZenlogic =
   (login: string = DOMAIN, selector: string = LOGIN_CHECK) =>
-  async (n: Nightmare, isTry?: boolean): Promise<Nightmare> => {
+  async (n: Page, isTry?: boolean): Promise<Page> => {
     console.log(ZENLOGIC_PASSWORD);
     console.log(ZENLOGIC_USERNAME);
     try {
-      !isTry && (await n.goto(login)); // サイトへ移動
-      return n
-        .type("input[id=account_username]", ZENLOGIC_USERNAME) // ユーザーID入力
-        .type("input[id=account_password]", ZENLOGIC_PASSWORD) // パスワード入力
-        .click("input[data-disable-with=ログイン]") // ログインボタンクリック
-        .wait(selector); // ログインが終わるまで待つ
+      !isTry && n.goto(login); // サイトへ移動
+      await n.waitForSelector("input[id=account_username]");
+      await n.type("input[id=account_username]", ZENLOGIC_USERNAME); // ユーザーID入力
+      await n.type("input[id=account_password]", ZENLOGIC_PASSWORD); // パスワード入力
+      await n.click("input[data-disable-with=ログイン]"); // ログインボタンクリック
+      await n.waitForSelector(selector); // ログインが終わるまで待つ
+      return n;
     } catch (error) {
       if (isTry) {
         return n;

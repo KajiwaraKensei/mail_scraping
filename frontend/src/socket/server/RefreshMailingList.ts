@@ -1,4 +1,4 @@
-import Nightmare from "nightmare";
+import Puppeteer from "puppeteer";
 import { Socket } from "socket.io";
 import { LoginZenlogic } from "~/mailingList/login/LoginZenlogic";
 import { GetMailingList } from "~/mailingList/mailingList/GetMailingList";
@@ -10,12 +10,15 @@ import { SaveMailingList } from "~/mailingList/mailingList/SaveMailingList";
  * @param socket ソケット
  */
 const Main = (socket: Socket) => async (_: string[]) => {
-  const n = new Nightmare();
+  const browser = await Puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  const page = await browser.newPage();
   try {
     socket.emit("process", "ログイン中");
-    void (await LoginZenlogic()(n));
+    void (await LoginZenlogic()(page));
     socket.emit("process", "メーリングリスト取得中");
-    const list = await GetMailingList(n);
+    const list = await GetMailingList(page);
     socket.emit("process", "メーリングリスト保存中");
     void (await SaveMailingList(list));
     socket.emit("complete", list);
@@ -23,7 +26,7 @@ const Main = (socket: Socket) => async (_: string[]) => {
   } catch (error) {
     console.log(error);
   } finally {
-    n.end();
+    browser.close();
   }
 };
 

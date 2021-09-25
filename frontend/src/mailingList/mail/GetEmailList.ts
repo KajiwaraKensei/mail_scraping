@@ -1,6 +1,6 @@
 //_______________________________________________
 // メールリスト取得
-import Nightmare from "nightmare";
+import { Page } from "puppeteer";
 import { LoginZenlogic } from "../login/LoginZenlogic";
 
 export type EmailList = {
@@ -21,48 +21,40 @@ export type EmailListAll = { [s: string]: EmailList };
 
 export const GetEmailList =
   (mailingLink: string) =>
-  async (n?: Nightmare): Promise<EmailList> => {
-    // ログイン
-    if (!n) {
-      // 引数にNightmareが入っていない場合は新しく作る
-      n = new Nightmare();
-      await LoginZenlogic()(n); // ログイン
-    }
-
+  async (n: Page): Promise<EmailList> => {
     console.log(mailingLink);
 
     // メール一覧のページに移動
-    await n.goto(mailingLink).wait(2500);
+    await n.goto(mailingLink);
+    await n.waitForTimeout(2500);
 
     // 値取得
-    return n
-      .evaluate(() => {
-        const data: EmailList = [];
-        const emailList =
-          document.querySelectorAll<HTMLInputElement>("#ml_members__address") ||
-          [];
-        const commentList =
-          document.querySelectorAll<HTMLInputElement>("#ml_members__comment") ||
-          [];
-        const postList =
-          document.querySelectorAll<HTMLInputElement>(
-            "input[name='ml[members][][post]']"
-          ) || [];
-        const subscribeList =
-          document.querySelectorAll<HTMLInputElement>(
-            "input[name='ml[members][][subscribe]']"
-          ) || [];
+    return await n.evaluate(() => {
+      const data: EmailList = [];
+      const emailList =
+        document.querySelectorAll<HTMLInputElement>("#ml_members__address") ||
+        [];
+      const commentList =
+        document.querySelectorAll<HTMLInputElement>("#ml_members__comment") ||
+        [];
+      const postList =
+        document.querySelectorAll<HTMLInputElement>(
+          "input[name='ml[members][][post]']"
+        ) || [];
+      const subscribeList =
+        document.querySelectorAll<HTMLInputElement>(
+          "input[name='ml[members][][subscribe]']"
+        ) || [];
 
-        emailList.forEach((_, index) => {
-          data.push({
-            email: emailList[index].value,
-            comment: commentList[index].value,
-            post: postList[index].checked,
-            subscribe: subscribeList[index].checked,
-          });
+      emailList.forEach((_, index) => {
+        data.push({
+          email: emailList[index].value,
+          comment: commentList[index].value,
+          post: postList[index].checked,
+          subscribe: subscribeList[index].checked,
         });
+      });
 
-        return data;
-      })
-      .then((r: EmailList) => r);
+      return data;
+    });
   };

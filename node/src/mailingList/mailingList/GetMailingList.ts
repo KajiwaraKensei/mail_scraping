@@ -1,5 +1,9 @@
-import Nightmare from "nightmare";
+//_______________________________________________
+// メーリングリストをスクレイピング
+import { Page } from "puppeteer";
 
+//_______________________________________________
+// 定数
 const PAGE_LIMIT = 100;
 const DOMAIN = "https://my.zenlogic.jp";
 const BASE_URL = DOMAIN + "/configurations/68698/mail/mailing_lists";
@@ -10,16 +14,24 @@ export type MailingList = {
   comment: string;
 }[];
 
+export type MailingListItem = {
+  mail: string;
+  link: string;
+  comment: string;
+};
+
+//_______________________________________________
+// メイン処理
+
 /**
  * メーリングリスト取得
  * @module GetMailingList
  * @param n
  * @returns メーリングリスト
  */
-export async function GetMailingList(n: Nightmare): Promise<MailingList> {
-  await n
-    .goto(BASE_URL) // メーリングリストのページに移動
-    .wait("#limit");
+export async function GetMailingList(n: Page): Promise<MailingList> {
+  await n.goto(BASE_URL); // メーリングリストのページに移動
+  await n.waitForSelector("#limit");
 
   // ページ数を取得
   const page = await getPageCount(n);
@@ -37,10 +49,10 @@ export async function GetMailingList(n: Nightmare): Promise<MailingList> {
  * @param n
  * @returns ページ数
  */
-const getPageCount = (n: Nightmare) => {
-  return n
-    .select("#limit", String(PAGE_LIMIT)) // 100件表示に切り替え
-    .wait(3000)
+const getPageCount = async (n: Page) => {
+  await n.select("#limit", String(PAGE_LIMIT)); // 100件表示に切り替え
+  await n.waitForTimeout(3000);
+  return await n
     .evaluate(() => {
       const target: any =
         document.querySelectorAll(".mb10 .pagination > ul") || [];
@@ -66,39 +78,37 @@ const getPageCount = (n: Nightmare) => {
  */
 const getData =
   (page: number, limit: number = PAGE_LIMIT) =>
-  (n: Nightmare) => {
-    return n
-      .goto(BASE_URL + `?limit=${limit}&page=${page}`) // メーリングリストのページに移動
-      .wait("#limit")
-      .evaluate(() => {
-        const DOMAIN = "https://my.zenlogic.jp";
-        const data: MailingList = [];
+  async (n: Page) => {
+    await n.goto(BASE_URL + `?limit=${limit}&page=${page}`); // メーリングリストのページに移動
+    await n.waitForSelector("#limit");
+    return await n.evaluate(() => {
+      const DOMAIN = "https://my.zenlogic.jp";
+      const data: MailingList = [];
 
-        // Email取得
-        const emailList =
-          document.querySelectorAll(
-            "#data-list td:nth-child(2) .punycode-email"
-          ) || [];
+      // Email取得
+      const emailList =
+        document.querySelectorAll(
+          "#data-list td:nth-child(2) .punycode-email"
+        ) || [];
 
-        // 詳細へ移動するリンク取得
-        const settingLink = document.querySelectorAll(
-          "#data-list td:nth-child(5) a"
-        );
+      // 詳細へ移動するリンク取得
+      const settingLink = document.querySelectorAll(
+        "#data-list td:nth-child(5) a"
+      );
 
-        // コメント取得
-        const commentList = document.querySelectorAll(
-          "#data-list td:nth-child(4)"
-        );
+      // コメント取得
+      const commentList = document.querySelectorAll(
+        "#data-list td:nth-child(4)"
+      );
 
-        // 取得したデータをまとめる
-        emailList.forEach((_, index) => {
-          data.push({
-            link: DOMAIN + (settingLink[index].getAttribute("href") || ""),
-            comment: commentList[index].textContent || "",
-            mail: emailList[index].textContent || "",
-          });
+      // 取得したデータをまとめる
+      emailList.forEach((_, index) => {
+        data.push({
+          link: DOMAIN + (settingLink[index].getAttribute("href") || ""),
+          comment: commentList[index].textContent || "",
+          mail: emailList[index].textContent || "",
         });
-        return data;
-      })
-      .then((data: MailingList) => data);
+      });
+      return data;
+    });
   };

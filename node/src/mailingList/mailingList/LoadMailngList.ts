@@ -1,13 +1,12 @@
+//_______________________________________________
+// メーリングリスト読み込み
 import { MailingList } from "./GetMailingList";
-
 import { MAILING_LIST_CSV } from "~/conf/mailingList";
 import { LoadCSV } from "~/util/csv";
 
 /**
- * メーリングリストのcsvを取得
+ * メーリングリストを読み込み
  * @module LoadMailingList
- * @param fileName 保存するファイル名
- * @param data 保存データ
  */
 export const LoadMailingList = async (): Promise<MailingList> => {
   const list = await LoadCSV(MAILING_LIST_CSV, {

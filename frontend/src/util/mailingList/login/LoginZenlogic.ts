@@ -1,6 +1,6 @@
 //_______________________________________________
 // サイトログイン
-import { Page } from "puppeteer";
+import puppeteer, { Page } from "puppeteer";
 
 const DOMAIN = "https://my.zenlogic.jp/";
 const ZENLOGIC_USERNAME = process.env.USER_ID || "";

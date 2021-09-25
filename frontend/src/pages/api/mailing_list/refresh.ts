@@ -1,10 +1,12 @@
 //_______________________________________________
 // メーリングリスト更新
 import type { NextApiRequest, NextApiResponse } from "next";
+import Puppeteer from "puppeteer";
+import { LoginZenlogic } from "~/util/mailingList/login/LoginZenlogic";
 import {
   GetMailingList,
   MailingList,
-} from "~/mailingList/mailingList/GetMailingList";
+} from "~/util/mailingList/mailingList/GetMailingList";
 
 //_______________________________________________
 // レスポンス
@@ -26,7 +28,12 @@ export default async function handler(
   res: NextApiResponse<ResponseMailingListAddressRefresh>
 ) {
   try {
-    const list = await GetMailingList();
+    const browser = await Puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+    await LoginZenlogic()(page);
+    const list = await GetMailingList(page);
 
     res.status(200).send({
       success: true,

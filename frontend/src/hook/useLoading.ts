@@ -36,9 +36,9 @@ export const useLoading = () => {
    * 通信失敗
    * @param message セットしたいメッセージ
    */
-  const setLoadingFail = (message: string) => {
+  const setLoadingFail = (message: any) => {
     console.log("fail", message);
-    setLoading(setFailLoading(message));
+    setLoading(setFailLoading(message?.message || ""));
   };
 
   /**

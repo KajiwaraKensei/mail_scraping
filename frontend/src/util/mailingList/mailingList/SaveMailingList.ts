@@ -2,8 +2,8 @@
 // メーリングリスト保存
 import { MailingList } from "./GetMailingList";
 import { saveCSV } from "~/util/csv";
-
-const FILE_NAME = "csv/mailing_list.csv";
+import {MAILING_LIST_CSV} from "~/conf/mailingList"
+const FILE_NAME = MAILING_LIST_CSV;
 
 /**
  * メーリングリストをcsvに保存

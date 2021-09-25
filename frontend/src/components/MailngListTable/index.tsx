@@ -3,9 +3,7 @@
 import type { NextPage } from "next";
 import React from "react";
 import styled from "styled-components";
-import useEmailList from "~/hook/useEmailList";
-import useMailingListAddress from "~/hook/useMailingListAddress";
-import { EmailList } from "~/mailingList/mail/GetEmailList";
+import { EmailList } from "~/util/mailingList/mail/GetEmailList";
 
 //_______________________________________________
 // component

@@ -1,7 +1,6 @@
 //_______________________________________________
 // メールリスト取得
 import { Page } from "puppeteer";
-import { LoginZenlogic } from "../login/LoginZenlogic";
 
 export type EmailList = {
   email: string;

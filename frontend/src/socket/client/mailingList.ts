@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { REFRESH_MAILING_LIST, REFRESH_MAIL_LIST } from "~/conf/mailingList";
-import { EmailListAll } from "~/mailingList/mail/GetEmailList";
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
+import { EmailListAll } from "~/util/mailingList/mail/GetEmailList";
+import { MailingList } from "~/util/mailingList/mailingList/GetMailingList";
 
 /**
  * メーリングリスト更新【ソケット通信(クライアント側)】

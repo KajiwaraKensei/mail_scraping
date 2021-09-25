@@ -1,10 +1,11 @@
 import puppeteer, { Page } from "puppeteer";
 import { Socket } from "socket.io";
-import { LoginZenlogic } from "~/mailingList/login/LoginZenlogic";
-import { GetEmailList } from "~/mailingList/mail/GetEmailList";
-import { LoadEmailList } from "~/mailingList/mail/LoadEmailList";
-import { SaveEmailList } from "~/mailingList/mail/SaveEmailList";
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
+
+import { LoginZenlogic } from "~/util/mailingList/login/LoginZenlogic";
+import { GetEmailList } from "~/util/mailingList/mail/GetEmailList";
+import { LoadEmailList } from "~/util/mailingList/mail/LoadEmailList";
+import { SaveEmailList } from "~/util/mailingList/mail/SaveEmailList";
+import { MailingList } from "~/util/mailingList/mailingList/GetMailingList";
 
 /**
  * メーリングリスト更新

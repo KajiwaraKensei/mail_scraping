@@ -1,8 +1,9 @@
 import Puppeteer from "puppeteer";
 import { Socket } from "socket.io";
-import { LoginZenlogic } from "~/mailingList/login/LoginZenlogic";
-import { GetMailingList } from "~/mailingList/mailingList/GetMailingList";
-import { SaveMailingList } from "~/mailingList/mailingList/SaveMailingList";
+
+import { LoginZenlogic } from "~/util/mailingList/login/LoginZenlogic";
+import { GetMailingList } from "~/util/mailingList/mailingList/GetMailingList";
+import { SaveMailingList } from "~/util/mailingList/mailingList/SaveMailingList";
 
 /**
  * メーリングリストアドレス更新

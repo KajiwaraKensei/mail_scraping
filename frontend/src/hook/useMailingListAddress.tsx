@@ -1,7 +1,7 @@
 //_______________________________________________
 // メーリングリストhook
 import React from "react";
-import { MailingList } from "~/mailingList/mailingList/GetMailingList";
+import { MailingList } from "~/util/mailingList/mailingList/GetMailingList";
 import { StoreContext } from "~/pages/_app";
 import {
   RefreshMailingListSocket,

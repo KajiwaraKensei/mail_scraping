@@ -1,7 +1,8 @@
 //_______________________________________________
 // メールリスト
 import React from "react";
-import { EmailList, EmailListAll } from "~/mailingList/mail/GetEmailList";
+
+import { EmailList, EmailListAll } from "~/util/mailingList/mail/GetEmailList";
 import GetEmailList from "~/util/api/GetEmailList";
 import useLoading from "./useLoading";
 

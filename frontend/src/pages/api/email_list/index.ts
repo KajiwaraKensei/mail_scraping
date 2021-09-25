@@ -1,8 +1,8 @@
 //_______________________________________________
 // メールリスト読み込み
 import type { NextApiRequest, NextApiResponse } from "next";
-import { EmailListAll } from "~/mailingList/mail/GetEmailList";
-import { LoadEmailList } from "~/mailingList/mail/LoadEmailList";
+import { EmailListAll } from "~/util/mailingList/mail/GetEmailList";
+import { LoadEmailList } from "~/util/mailingList/mail/LoadEmailList";
 
 //_______________________________________________
 // レスポンス

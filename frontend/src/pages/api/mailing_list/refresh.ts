@@ -2,11 +2,11 @@
 // メーリングリスト更新
 import type { NextApiRequest, NextApiResponse } from "next";
 import Puppeteer from "puppeteer";
-import { LoginZenlogic } from "~/mailingList/login/LoginZenlogic";
+import { LoginZenlogic } from "~/util/mailingList/login/LoginZenlogic";
 import {
   GetMailingList,
   MailingList,
-} from "~/mailingList/mailingList/GetMailingList";
+} from "~/util/mailingList/mailingList/GetMailingList";
 
 //_______________________________________________
 // レスポンス

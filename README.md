@@ -9,7 +9,7 @@
  - Next.js@11
  - styled-components
  - socket.io
- - Nightmare
+ - puppeteer
 
 ### 使用方法
 
@@ -33,7 +33,7 @@ yarn dev
  - yarn@1.22.10
  - TypeScript
  - webpack@5
- - Nightmare
+ - puppeteer
 
 ### 使用方法
 *.env.example* を参考に *./node* に *.env* ファイルを作成

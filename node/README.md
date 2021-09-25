@@ -6,7 +6,7 @@
  - yarn@1.22.10
  - TypeScript
  - webpack@5
- - Nightmare
+ - puppeteer
 
 ## 使用方法
 ```bash

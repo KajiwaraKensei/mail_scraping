@@ -28,6 +28,7 @@ export const LoginZenlogic =
       await n.waitForSelector(selector); // ログインが終わるまで待つ
       return n;
     } catch (error) {
+      console.error(error);
       if (isTry) {
         return n;
       }

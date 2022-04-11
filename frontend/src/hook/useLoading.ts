@@ -1,6 +1,6 @@
 //_______________________________________________
 // 通信
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   finishLoading,
   LoadingInit,
@@ -13,14 +13,13 @@ import {
 // メイン
 export const useLoading = () => {
   const [loading, setLoading] = useState(LoadingInit);
-
+  const callbackLoading = useCallback(setLoading, [])
   /**
    * 通信開始
    * @param message セットしたいメッセージ
    */
   const setLoadingStart = (message?: string) => {
-    console.log("start", message);
-    setLoading(ResetLoading(message));
+    callbackLoading(ResetLoading(message));
   };
 
   /**
@@ -28,8 +27,7 @@ export const useLoading = () => {
    * @param message セットしたいメッセージ
    */
   const setLoadingSuccess = (message: string) => {
-    console.log("success", message);
-    setLoading(setSuccessLoading(message));
+    callbackLoading(setSuccessLoading(message));
   };
 
   /**
@@ -37,8 +35,7 @@ export const useLoading = () => {
    * @param message セットしたいメッセージ
    */
   const setLoadingFail = (message: any) => {
-    console.log("fail", message);
-    setLoading(setFailLoading(message?.message || ""));
+    callbackLoading(setFailLoading(message?.message || ""));
   };
 
   /**
@@ -46,8 +43,7 @@ export const useLoading = () => {
    * @param message セットしたいメッセージ
    */
   const setLoadingFinish = () => {
-    console.log("finish");
-    setLoading(finishLoading);
+    callbackLoading(finishLoading);
   };
 
   /**
@@ -55,7 +51,7 @@ export const useLoading = () => {
    * @param message セットしたいメッセージ
    */
   const setLoadingMessage = (message: string) => {
-    setLoading((n) => ({ ...n, message }));
+    callbackLoading((n) => ({ ...n, message }));
   };
   return {
     loading,
@@ -64,7 +60,7 @@ export const useLoading = () => {
     setLoadingFail,
     setLoadingFinish,
     setLoadingMessage,
-    setLoading,
+    callbackLoading,
   };
 };
 

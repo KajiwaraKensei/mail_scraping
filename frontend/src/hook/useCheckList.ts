@@ -1,6 +1,6 @@
 //_______________________________________________
 // チェックリスト
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 export type CheckList = { [key: string]: boolean };
 
@@ -8,12 +8,13 @@ export type CheckList = { [key: string]: boolean };
 // メイン
 export const useCheckList = (name: string) => {
   const [checkList, setCheckList] = React.useState<CheckList>({});
+  const callbackCheckList = useCallback(setCheckList, [])
 
   /**
    * ローカルストレージからチェックリストを読み込み
    */
   const refreshCheckList = () => {
-    setCheckList(() => getLocalStorage(name));
+    callbackCheckList(() => getLocalStorage(name));
   };
 
   /**
@@ -22,7 +23,7 @@ export const useCheckList = (name: string) => {
    * @param value 値
    */
   const changeCheckList = (key: string, value: boolean) => {
-    setCheckList((n) => ({ ...n, [key]: value }));
+    callbackCheckList((n) => ({ ...n, [key]: value }));
     saveCheckList();
   };
 
@@ -56,7 +57,7 @@ export const useCheckList = (name: string) => {
    * @param keys 追加でチェックしたいキー
    */
   const checkAll = (keys?: string[]) => () => {
-    setCheckList((n) => {
+    callbackCheckList((n) => {
       const _n = JSON.parse(JSON.stringify(n));
       keys &&
         keys.forEach((key) => {

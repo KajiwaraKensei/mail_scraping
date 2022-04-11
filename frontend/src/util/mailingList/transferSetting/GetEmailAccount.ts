@@ -1,13 +1,11 @@
 //_______________________________________________
 // メーリングリストをスクレイピング
 import { Page } from "puppeteer";
-import { SetTimeStamp } from "../timestamp/SetTimeStamp";
 
 //_______________________________________________
 // 定数
-const PAGE_LIMIT = 100;
 const DOMAIN = "https://my.zenlogic.jp";
-const BASE_URL = DOMAIN + "/configurations/68698/mail/mailing_lists";
+const BASE_URL = DOMAIN + "/configurations/68698/mail/accounts";
 
 export type MailingList = {
   mail: string;
@@ -25,23 +23,23 @@ export type MailingListItem = {
 // メイン処理
 
 /**
- * メーリングリスト取得
- * @module GetMailingList
+ * メールアカウント取得
+ * @module GetEmailAccount
  * @param n
  * @returns メーリングリスト
  */
-export async function GetMailingList(n: Page): Promise<MailingList> {
+export async function GetEmailAccount(n: Page): Promise<MailingList> {
   await n.goto(BASE_URL); // メーリングリストのページに移動
-  await n.waitForSelector("#limit");
+  await n.waitForTimeout(2000);
 
   // ページ数を取得
   const page = await getPageCount(n);
-  let list: MailingList = [];
-  // 各ページのデータを取得
+  // 全てのメールアドレス表示
   for (let i = 0; i < page; i++) {
-    list = [...list, ...(await getData(i + 1)(n))];
+    await n.waitForSelector('.control-group > div > #more-mail-accounts > span > .btn')
+    await n.click('.control-group > div > #more-mail-accounts > span > .btn')
   }
-  return list;
+  return await getData(n);
 }
 
 /**
@@ -51,21 +49,14 @@ export async function GetMailingList(n: Page): Promise<MailingList> {
  * @returns ページ数
  */
 const getPageCount = async (n: Page) => {
-  await n.select("#limit", String(PAGE_LIMIT)); // 100件表示に切り替え
-  await n.waitForTimeout(3000);
+  await n.waitForSelector('#tools-mail-accounts > #count-accounts > div > .ml20 > span:nth-child(2)')
   return await n
     .evaluate(() => {
       const target: any =
-        document.querySelectorAll(".mb10 .pagination > ul") || [];
-      const count = target[0].childElementCount;
+        document.querySelector('#tools-mail-accounts > #count-accounts > div > .ml20 > span:nth-child(2)') ;
+      const count = target.innerText      ;
 
-      // １ページだけの場合
-      if (count <= 3) {
-        return 1;
-      }
-
-      // 後ろから3番目のテキストを数字に変換
-      return Number(target[0].children.item(count - 3).querySelector("a").text);
+      return Math.floor((Number(count) - 1) / 100);
     })
     .then((c: number) => c);
 };
@@ -78,36 +69,33 @@ const getPageCount = async (n: Page) => {
  * @returns メーリングリスト
  */
 const getData =
-  (page: number, limit: number = PAGE_LIMIT) =>
   async (n: Page) => {
-    await n.goto(BASE_URL + `?limit=${limit}&page=${page}`); // メーリングリストのページに移動
-    await n.waitForSelector("#limit");
+    await n.waitForTimeout(2000);
+
     const res =  await n.evaluate(() => {
       const DOMAIN = "https://my.zenlogic.jp";
       const data: MailingList = [];
 
       // Email取得
       const emailList =
-        document.querySelectorAll(
-          "#data-list td:nth-child(2) .punycode-email"
-        ) || [];
+      document.querySelectorAll("#data-list > tr > td:nth-child(2)")|| []
+
+      // ドメイン名取得
+      const domainList =
+      document.querySelectorAll("#data-list > tr > td:nth-child(3)")|| []
 
       // 詳細へ移動するリンク取得
-      const settingLink = document.querySelectorAll(
-        "#data-list td:nth-child(5) a"
-      );
-
+      const settingLink =document.querySelectorAll("#data-list > tr > td:nth-child(6) > a") || []
+      
       // コメント取得
-      const commentList = document.querySelectorAll(
-        "#data-list td:nth-child(4)"
-      );
+      const commentList = document.querySelectorAll("#data-list > tr > td:nth-child(4)")
 
       // 取得したデータをまとめる
       emailList.forEach((_, index) => {
         data.push({
-          link: DOMAIN + (settingLink[index].getAttribute("href") || ""),
+          link: (settingLink[index].getAttribute("href") || ""),
           comment: commentList[index].textContent || "",
-          mail: emailList[index].textContent || "",
+          mail: (emailList[index].textContent || "") + "@" + domainList[index].textContent || "",
         });
       });
       return data;

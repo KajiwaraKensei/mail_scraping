@@ -1,58 +1,62 @@
 //_______________________________________________
 // メーリングリストhook
 import React, { useCallback } from "react";
-import { MailingList } from "~/util/mailingList/mailingList/GetMailingList";
+import { MailingList } from "~/util/mailingList/transferSetting/GetEmailAccount";
 import { StoreContext } from "~/pages/_app";
 import {
-  RefreshMailingListSocket,
-  RefreshMailListSocket,
-} from "~/socket/client/mailingList";
-import GetMailingList from "~/util/api/GetMailingList";
+  RefreshMailAccountSocket,
+} from "~/socket/client/transferSetting";
+import GetMailingList from "~/util/api/GetMailAccounts";
 import useLoading from "./useLoading";
 
 //_______________________________________________
 //　カスタムフック
-export const useMailingAddress = () => {
-  const [mailingList, setMailingList] = React.useState<MailingList>([]);
-  const callbackMailingList = useCallback(setMailingList, [])
+export const useMailSetting = () => {
+  const [mailSettings, setMailSettings] = React.useState<MailingList>([]);
+  const callbackMailSettings = useCallback(setMailSettings, [])
   const loading = useLoading();
   const { state } = React.useContext(StoreContext);
 
-  // メーリングリストアドレス取得
+  // メールアカウントロード
   React.useEffect(() => {
     if (state.login.state === true) {
-      void MailingListLoad();
+      void EmailSettingLoad();
     }
   }, [state.login.state]);
 
+
   /**
-   * メーリングリストを再取得する
-   * @module MailingListRefresh
+   * メールアカウントを再取得する
+   * @module EmailSettingRefresh
    */
-  const MailingListRefresh = () => {
+  const EmailSettingRefresh = async () => {
     loading.setLoadingStart(); // 通信開始
 
-    return RefreshMailingListSocket(loading.setLoadingMessage)
+    await RefreshMailAccountSocket(loading.setLoadingMessage)
       .then((list) => {
-        callbackMailingList(list);
+        console.log(list);
+
+        callbackMailSettings(list);
         loading.setLoadingSuccess("");
         return list;
       })
       .catch(loading.setLoadingFail)
       .finally(loading.setLoadingFinish);
+
+    return
   };
 
   /**
-   * メーリングリストをサーバーから取得する
-   * @module MailingListLoad
+   * メールアカウントをサーバーから取得する
+   * @module EmailSettingLoad
    */
-  const MailingListLoad = () => {
+  const EmailSettingLoad = () => {
     loading.setLoadingStart();
     GetMailingList()
-      .then((res) => {
+      .then(async (res) => {
         if (res.success === true) {
           loading.setLoadingSuccess("");
-          callbackMailingList(res.list);
+          callbackMailSettings(res.list);
         } else {
           loading.setLoadingFail(res.error);
         }
@@ -62,11 +66,12 @@ export const useMailingAddress = () => {
   };
 
 
+
   return {
     loading: loading.loading,
-    mailingList,
-    fn: { MailingListRefresh, MailingListLoad },
+    mailSettings,
+    fn: { EmailSettingRefresh, EmailSettingLoad },
   };
 };
 
-export default useMailingAddress;
+export default useMailSetting;

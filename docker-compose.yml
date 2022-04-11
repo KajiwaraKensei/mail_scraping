@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mail_scraping:
+    container_name: mail_scraping
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app 
+    tty: true
+    ports:
+      - "3000:3000"

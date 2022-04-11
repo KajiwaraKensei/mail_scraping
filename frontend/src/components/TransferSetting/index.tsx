@@ -1,8 +1,8 @@
 //_______________________________________________
 // メーリングリスト一覧
 import type { NextPage } from "next";
-import Link from 'next/link'
 import React, { useContext } from "react";
+import Link from 'next/link'
 
 import styled from "styled-components";
 import {
@@ -14,29 +14,30 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Typography,
+  Typography
 } from "@material-ui/core";
+import TableRow from '@material-ui/core/TableRow';
+
 import RefreshIcon from "@material-ui/icons/Refresh";
-import CheckIcon from '@material-ui/icons/Check';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Loading from "../Loading";
 import Login from "~/components/Login";
 import { StoreContext } from "~/pages/_app";
-import useEmailList from "~/hook/useEmailList";
-import useMailingListAddress from "~/hook/useMailingListAddress";
+import useEmailList from "~/hook/useTransferSetting";
+import useMailingListAddress from "~/hook/useEmailSetting";
 import useCheckList from "~/hook/useCheckList";
-import { MailingListItem } from "~/util/mailingList/mailingList/GetMailingList";
+import { MailingListItem } from "~/util/mailingList/transferSetting/GetEmailAccount";
 import { CSV_Download } from "~/util/CSV_Download";
-import FilterInputComponent from "./FilterInput"
+import FilterInputComponent from "../MailingList/FilterInput"
+
 //_______________________________________________
 // component
-const Component: NextPage = () => {
+const TransferSettingComponent: NextPage = () => {
   const { state } = useContext(StoreContext);
-  const { mailingList, loading, fn } = useMailingListAddress();
-  const { emailList, setEmailList, fn: emailFn, loading: emailLoading } = useEmailList();
-  const { checkList, fn: checkFn } = useCheckList("mailing_list");
+  const { mailSettings, loading, } = useMailingListAddress();
+  const { emailList, fn: emailFn, loading: emailLoading, isAllShow } = useEmailList();
+  const { checkList, fn: checkFn } = useCheckList("transfer_setting");
 
   // CSVダウンロード
   const handleClickCSV = () => {
@@ -46,7 +47,7 @@ const Component: NextPage = () => {
     // ダウンロード
     CSV_Download(
       csv,
-      "メーリングリスト_" + new Date().toLocaleDateString() + ".csv",
+      "転送設定_" + new Date().toLocaleDateString() + ".csv",
       "SJIS"
     );
   };
@@ -56,37 +57,22 @@ const Component: NextPage = () => {
     await emailFn.MailListRefresh([mail])();
   };
 
-  // 全てのメールリスト再読み込み
-  const AllRefresh =
-    (_mailingList = mailingList) =>
-      async () => {
-        await emailFn.MailListRefresh(_mailingList)();
-      };
 
-  // メーリングリスト一覧際読み込み
-  const RefreshMailList = async () => {
-    const list = await fn.MailingListRefresh();
-    if (list) {
-      AllRefresh(list)();
-      return;
-    }
-  };
 
   // メールリスト展開
   const mapMailList = (key: string) =>
     (emailList[key] || []).map((mail) => (
-      <TableRow key={"mailing_list_" + key + "_" + mail.email}>
-        <TableCell component="th">{mail.email}</TableCell>
-        <TableCell>{mail.comment}</TableCell>
-        <TableCell align="center">{mail.post ? <CheckIcon /> : ""}</TableCell>
-        <TableCell align="center">{mail.subscribe ? <CheckIcon /> : ""}</TableCell>
+      <TableRow key={"mailing_list_" + key + "_" + mail.forwardingAddress + mail.head}>
+        <TableCell component="th">{mail.forwardingAddress}</TableCell>
+        <TableCell>{mail.head}</TableCell>
+        <TableCell>{mail.terms}</TableCell>
       </TableRow>
     ));
 
   // メーリングリスト展開
-  const mapMailingAddress = mailingList.map((mail) => {
+  const mapMailingAddress = mailSettings.map((mail) => {
 
-    if (!emailList[mail.mail] || emailList[mail.mail].length === 0) {
+    if ((!emailList[mail.mail] || emailList[mail.mail].length === 0) && !isAllShow) {
       return null
     }
 
@@ -107,13 +93,10 @@ const Component: NextPage = () => {
           <Table size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableCell component="th">メールアドレス</TableCell>
-                <TableCell component="th">コメント</TableCell>
+                <TableCell component="th">転送先</TableCell>
+                <TableCell component="th">メールヘッダー</TableCell>
                 <TableCell component="th" align="center">
-                  投稿
-                </TableCell>
-                <TableCell component="th" align="center">
-                  購読
+                  条件
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -121,6 +104,7 @@ const Component: NextPage = () => {
               {
                 mapMailList(mail.mail)
               }
+              {(!emailList[mail.mail] || emailList[mail.mail].length === 0) && <TableRow><TableCell>設定なし</TableCell></TableRow>}
             </TableBody>
           </Table>
         </TableContainer>
@@ -130,9 +114,9 @@ const Component: NextPage = () => {
 
   const HeadDom = state.login.state && (
     <div>
-      <Typography variant="h4" >メーリングリスト一覧</Typography>
+      <Typography variant="h4" >転送設定一覧</Typography>
       <ButtonGroup aria-label="outlined button group">
-        <Button><Link href="/transfer-settings" >転送設定に切り替え</Link></Button>
+        <Button><Link href="/" >メーリングリストに切り替え</Link></Button>
         <Button onClick={checkFn.checkAll(Object.keys(emailList))}>
           全てチェック
         </Button>
@@ -149,9 +133,9 @@ const Component: NextPage = () => {
     <Body>
       {HeadDom}
       {mapMailingAddress}
-      {mailingList.length <= 0 && <div>データなし</div>}
+      {Object.keys(emailList).length <= 0 && <div>データなし</div>}
       <Loading loading={loading} />
-      <Loading loading={emailLoading}></Loading>
+      <Loading loading={emailLoading} />
       {!state.login.state && <Login />}
     </Body>
   );
@@ -191,30 +175,4 @@ const Body = styled.div`
   }
 `;
 
-const Table1 = styled.table`
-  border-collapse: collapse;
-  th {
-    background-color: #333;
-    color: #222;
-  }
-  & td,
-  & th {
-    border: 1px solid;
-    min-width: 5rem;
-    padding: 0.5rem;
-    &:first-child {
-      width: 30rem;
-      max-width: 30rem;
-    }
-    &:nth-child(2) {
-      width: 10rem;
-      max-width: 10rem;
-    }
-    &:nth-child(3),
-    &:nth-child(4) {
-      text-align: center;
-    }
-  }
-`;
-
-export default Component;
+export default TransferSettingComponent;

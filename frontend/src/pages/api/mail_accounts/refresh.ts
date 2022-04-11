@@ -1,8 +1,8 @@
 //_______________________________________________
 // メーリングリスト更新
 import type { NextApiRequest, NextApiResponse } from "next";
-import RefreshEmailAccount from "~/socket/server/RefreshMailingList";
-import RefreshTransferSetting from "~/socket/server/RefreshMailList";
+import RefreshEmailAccount from "~/socket/server/RefreshEmailAccount";
+import RefreshTransferSetting from "~/socket/server/RefreshTransferSetting";
 
 
 //_______________________________________________

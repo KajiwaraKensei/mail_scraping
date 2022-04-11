@@ -1,22 +1,24 @@
 //_______________________________________________
 // メールリスト
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
-import { EmailList, EmailListAll } from "~/util/mailingList/mail/GetEmailList";
-import GetEmailList from "~/util/api/GetEmailList";
+import GetEmailList from "~/util/api/GetTransferSetting";
 import useLoading from "./useLoading";
-import { MailingList } from "~/util/mailingList/mailingList/GetMailingList";
-import { RefreshMailListSocket } from "~/socket/client/mailingList";
-
+import { EmailList, EmailListAll } from "~/util/mailingList/transferSetting/GetTransferSetting";
+import { RefreshTransferSettingSocket } from "~/socket/client/transferSetting";
+import {MailingList} from "util/mailingList/transferSetting/GetEmailAccount"
 //_______________________________________________
 // カスタムフック
 
 let emailListOg: EmailListAll = {}
 let backKeyword = ""
-export const useEmailList = () => {
+export const useTransferSetting = () => {
   const [emailList, setEmailList] = React.useState<EmailListAll>({});
   const callbackEmailList = useCallback(setEmailList, [])
   const loading = useLoading();
+  const [isAllShow, setIsAllShow] = useState(false)
+  const callbackIsAllShow = useCallback(setIsAllShow, [])
+
   // メーリングリストアドレス取得
   React.useEffect(() => {
     void EmailListLoad();
@@ -66,7 +68,7 @@ export const useEmailList = () => {
    const MailListRefresh = (mailingList: MailingList) => async () => {
     loading.setLoadingStart(); // 通信開始
 
-    const mailList = await RefreshMailListSocket(
+    const mailList = await RefreshTransferSettingSocket(
       mailingList,
       loading.setLoadingMessage
     )
@@ -88,22 +90,17 @@ export const useEmailList = () => {
   const toCSV = (list: EmailListAll = emailList) => {
     const data: string[][] = [
       [
-        "メーリングリストアドレス",
-        "メールアドレス",
-        "コメント",
-        "投稿",
-        "購読",
-      ],
+        "メールアカウント", "メールヘッダ", "条件",  "転送先メールアドレス"
+    ],
     ];
-    Object.keys(list).forEach((mailingListAddress) => {
-      const mailList = list[mailingListAddress];
-      mailList.forEach(({ email, comment, post, subscribe }) => {
+    Object.keys(list).forEach((mailAccount) => {
+      const mailList = list[mailAccount];
+      mailList.forEach(({terms, head, forwardingAddress}) => {
         data.push([
-          mailingListAddress,
-          email,
-          comment,
-          post ? "1" : "0",
-          subscribe ? "1" : "0",
+        mailAccount,
+          head,
+          terms,
+          forwardingAddress,
         ]);
       });
     });
@@ -116,8 +113,10 @@ export const useEmailList = () => {
     const next: EmailListAll = {}
     if(keyword === ""){
       callbackEmailList(emailListOg)
+      callbackIsAllShow(true)
       return
     }
+    callbackIsAllShow(false)
     Object.keys(emailListOg).forEach((key)=>{
 
       // メーリングリスト名に含まれる場合
@@ -130,7 +129,7 @@ export const useEmailList = () => {
       emailListOg[key].forEach((item)=>{
 
         // キーワードに一致しない
-        if(item.comment.indexOf(keyword) < 0 && item.email.indexOf(keyword) < 0){
+        if(item.terms.indexOf(keyword) < 0 && item.forwardingAddress.indexOf(keyword) < 0){
           return
         }
         // 初回限定
@@ -146,10 +145,11 @@ export const useEmailList = () => {
   return {
     loading: loading.loading,
     emailList,
+    isAllShow,
     setEmailListItem,
     setEmailList: setEmailListFunction,
     fn: { EmailListLoad, toCSV, filterList, MailListRefresh },
   };
 };
 
-export default useEmailList;
+export default useTransferSetting;

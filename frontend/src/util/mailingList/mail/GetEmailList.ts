@@ -28,7 +28,7 @@ export const GetEmailList =
     await n.waitForTimeout(2500);
 
     // 値取得
-    return await n.evaluate(() => {
+    const res = await n.evaluate(() => {
       const data: EmailList = [];
       const emailList =
         document.querySelectorAll<HTMLInputElement>("#ml_members__address") ||
@@ -56,4 +56,6 @@ export const GetEmailList =
 
       return data;
     });
+    
+    return res
   };

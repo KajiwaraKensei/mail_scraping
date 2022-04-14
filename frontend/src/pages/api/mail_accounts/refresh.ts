@@ -29,6 +29,7 @@ export default async function handler(
         success: false,
         error: "既に実行しています",
       });
+      return
     }
     loading = true
     res.status(200).send({

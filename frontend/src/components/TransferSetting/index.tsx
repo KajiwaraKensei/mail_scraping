@@ -2,7 +2,7 @@
 // メーリングリスト一覧
 import type { NextPage } from "next";
 import React, { useContext } from "react";
-import Link from 'next/link'
+import Link from "next/link";
 
 import styled from "styled-components";
 import {
@@ -14,13 +14,13 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Typography
+  Typography,
 } from "@material-ui/core";
-import TableRow from '@material-ui/core/TableRow';
+import TableRow from "@material-ui/core/TableRow";
 
 import RefreshIcon from "@material-ui/icons/Refresh";
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Loading from "../Loading";
 import Login from "~/components/Login";
 import { StoreContext } from "~/pages/_app";
@@ -29,14 +29,19 @@ import useMailingListAddress from "~/hook/useEmailSetting";
 import useCheckList from "~/hook/useCheckList";
 import { MailingListItem } from "~/util/mailingList/transferSetting/GetEmailAccount";
 import { CSV_Download } from "~/util/CSV_Download";
-import FilterInputComponent from "../MailingList/FilterInput"
+import FilterInputComponent from "../MailingList/FilterInput";
 
 //_______________________________________________
 // component
 const TransferSettingComponent: NextPage = () => {
   const { state } = useContext(StoreContext);
-  const { mailSettings, loading, } = useMailingListAddress();
-  const { emailList, fn: emailFn, loading: emailLoading, isAllShow } = useEmailList();
+  const { mailSettings, loading } = useMailingListAddress();
+  const {
+    emailList,
+    fn: emailFn,
+    loading: emailLoading,
+    isAllShow,
+  } = useEmailList();
   const { checkList, fn: checkFn } = useCheckList("transfer_setting");
 
   // CSVダウンロード
@@ -57,12 +62,12 @@ const TransferSettingComponent: NextPage = () => {
     await emailFn.MailListRefresh([mail])();
   };
 
-
-
   // メールリスト展開
   const mapMailList = (key: string) =>
     (emailList[key] || []).map((mail) => (
-      <TableRow key={"mailing_list_" + key + "_" + mail.forwardingAddress + mail.head}>
+      <TableRow
+        key={"mailing_list_" + key + "_" + mail.forwardingAddress + mail.head}
+      >
         <TableCell component="th">{mail.forwardingAddress}</TableCell>
         <TableCell>{mail.head}</TableCell>
         <TableCell>{mail.terms}</TableCell>
@@ -71,9 +76,11 @@ const TransferSettingComponent: NextPage = () => {
 
   // メーリングリスト展開
   const mapMailingAddress = mailSettings.map((mail) => {
-
-    if ((!emailList[mail.mail] || emailList[mail.mail].length === 0) && !isAllShow) {
-      return null
+    if (
+      (!emailList[mail.mail] || emailList[mail.mail].length === 0) &&
+      !isAllShow
+    ) {
+      return null;
     }
 
     return (
@@ -84,7 +91,8 @@ const TransferSettingComponent: NextPage = () => {
             onChange={checkFn.handleChangeCheckBox(mail.mail)}
             inputProps={{ "aria-label": "primary checkbox" }}
           />
-          {mail.mail}
+          <Link href={mail.link}>{mail.mail}</Link>
+
           <IconButton disabled={loading.loading} onClick={MailRefresh(mail)}>
             <RefreshIcon fontSize="small" />
           </IconButton>
@@ -101,33 +109,34 @@ const TransferSettingComponent: NextPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {
-                mapMailList(mail.mail)
-              }
-              {(!emailList[mail.mail] || emailList[mail.mail].length === 0) && <TableRow><TableCell>設定なし</TableCell></TableRow>}
+              {mapMailList(mail.mail)}
+              {(!emailList[mail.mail] || emailList[mail.mail].length === 0) && (
+                <TableRow>
+                  <TableCell>設定なし</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-    )
+    );
   });
 
   const HeadDom = state.login.state && (
     <div>
-      <Typography variant="h4" >転送設定一覧</Typography>
+      <Typography variant="h4">転送設定一覧</Typography>
       <ButtonGroup aria-label="outlined button group">
-        <Button><Link href="/" >メーリングリストに切り替え</Link></Button>
+        <Button>
+          <Link href="/">メーリングリストに切り替え</Link>
+        </Button>
         <Button onClick={checkFn.checkAll(Object.keys(emailList))}>
           全てチェック
         </Button>
-        <Button onClick={handleClickCSV}>
-          CSVにエクスポート
-        </Button>
+        <Button onClick={handleClickCSV}>CSVにエクスポート</Button>
       </ButtonGroup>
       <FilterInputComponent handleSubmit={emailFn.filterList} />
     </div>
-
-  )
+  );
 
   return (
     <Body>

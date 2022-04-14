@@ -1,7 +1,7 @@
 //_______________________________________________
 // メーリングリスト一覧
 import type { NextPage } from "next";
-import Link from 'next/link'
+import Link from "next/link";
 import React, { useContext } from "react";
 
 import styled from "styled-components";
@@ -18,9 +18,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import CheckIcon from '@material-ui/icons/Check';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import CheckIcon from "@material-ui/icons/Check";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Loading from "../Loading";
 import Login from "~/components/Login";
 import { StoreContext } from "~/pages/_app";
@@ -29,13 +29,18 @@ import useMailingListAddress from "~/hook/useMailingListAddress";
 import useCheckList from "~/hook/useCheckList";
 import { MailingListItem } from "~/util/mailingList/mailingList/GetMailingList";
 import { CSV_Download } from "~/util/CSV_Download";
-import FilterInputComponent from "./FilterInput"
+import FilterInputComponent from "./FilterInput";
 //_______________________________________________
 // component
 const Component: NextPage = () => {
   const { state } = useContext(StoreContext);
   const { mailingList, loading, fn } = useMailingListAddress();
-  const { emailList, setEmailList, fn: emailFn, loading: emailLoading } = useEmailList();
+  const {
+    emailList,
+    setEmailList,
+    fn: emailFn,
+    loading: emailLoading,
+  } = useEmailList();
   const { checkList, fn: checkFn } = useCheckList("mailing_list");
 
   // CSVダウンロード
@@ -59,9 +64,9 @@ const Component: NextPage = () => {
   // 全てのメールリスト再読み込み
   const AllRefresh =
     (_mailingList = mailingList) =>
-      async () => {
-        await emailFn.MailListRefresh(_mailingList)();
-      };
+    async () => {
+      await emailFn.MailListRefresh(_mailingList)();
+    };
 
   // メーリングリスト一覧際読み込み
   const RefreshMailList = async () => {
@@ -79,15 +84,16 @@ const Component: NextPage = () => {
         <TableCell component="th">{mail.email}</TableCell>
         <TableCell>{mail.comment}</TableCell>
         <TableCell align="center">{mail.post ? <CheckIcon /> : ""}</TableCell>
-        <TableCell align="center">{mail.subscribe ? <CheckIcon /> : ""}</TableCell>
+        <TableCell align="center">
+          {mail.subscribe ? <CheckIcon /> : ""}
+        </TableCell>
       </TableRow>
     ));
 
   // メーリングリスト展開
   const mapMailingAddress = mailingList.map((mail) => {
-
     if (!emailList[mail.mail] || emailList[mail.mail].length === 0) {
-      return null
+      return null;
     }
 
     return (
@@ -98,7 +104,7 @@ const Component: NextPage = () => {
             onChange={checkFn.handleChangeCheckBox(mail.mail)}
             inputProps={{ "aria-label": "primary checkbox" }}
           />
-          {mail.mail}
+          <Link href={mail.link}>{mail.mail}</Link>
           <IconButton disabled={loading.loading} onClick={MailRefresh(mail)}>
             <RefreshIcon fontSize="small" />
           </IconButton>
@@ -117,33 +123,28 @@ const Component: NextPage = () => {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {
-                mapMailList(mail.mail)
-              }
-            </TableBody>
+            <TableBody>{mapMailList(mail.mail)}</TableBody>
           </Table>
         </TableContainer>
       </div>
-    )
+    );
   });
 
   const HeadDom = state.login.state && (
     <div>
-      <Typography variant="h4" >メーリングリスト一覧</Typography>
+      <Typography variant="h4">メーリングリスト一覧</Typography>
       <ButtonGroup aria-label="outlined button group">
-        <Button><Link href="/transfer-settings" >転送設定に切り替え</Link></Button>
+        <Button>
+          <Link href="/transfer-settings">転送設定に切り替え</Link>
+        </Button>
         <Button onClick={checkFn.checkAll(Object.keys(emailList))}>
           全てチェック
         </Button>
-        <Button onClick={handleClickCSV}>
-          CSVにエクスポート
-        </Button>
+        <Button onClick={handleClickCSV}>CSVにエクスポート</Button>
       </ButtonGroup>
       <FilterInputComponent handleSubmit={emailFn.filterList} />
     </div>
-
-  )
+  );
 
   return (
     <Body>

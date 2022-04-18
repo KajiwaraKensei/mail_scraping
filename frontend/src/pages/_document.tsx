@@ -7,7 +7,7 @@ export default class Document extends NextDocument {
         <Head lang="ja">
           <meta charSet="utf-8" />
           <meta name="description" content="List of internal mailing lists" />
-          <meta property="og:title" content="mailing list" />
+          <meta property="og:title" content="ic-MailAccounts" />
           <meta name="theme-color" content="#000" />
           <meta
             property="og:description"

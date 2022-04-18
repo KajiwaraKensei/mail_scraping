@@ -58,7 +58,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>mailing list</title>
+        <title>iCraft-MailAccounts</title>
       </Head>
       <StoreContext.Provider value={{ state, dispatch }}>
         <Component {...pageProps} />

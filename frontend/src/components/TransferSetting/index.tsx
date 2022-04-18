@@ -112,8 +112,7 @@ const TransferSettingComponent: NextPage = () => {
             onChange={checkFn.handleChangeCheckBox(mail.mail)}
             inputProps={{ "aria-label": "primary checkbox" }}
           />
-          <Link href={mail.link}>{mail.mail}</Link>
-
+          <a href={mail.link} target="noreferrer noopener _blank" >{mail.mail}</a>
           <IconButton disabled={loading.loading} onClick={MailRefresh(mail)}>
             <RefreshIcon fontSize="small" />
           </IconButton>

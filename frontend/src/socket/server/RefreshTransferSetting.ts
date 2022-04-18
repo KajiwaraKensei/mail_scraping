@@ -57,7 +57,7 @@ async function getMailListSub(n: Page, _: MailingList, socket?: Socket) {
   for (const mail of _) {
     socket && socket.emit(
       "process",
-      `転送設定取得中(${++count}/${length}) ${mail.link}`
+      `${mail.link} (${++count}/${length})`
     ); // 何件目を取得しているかのメッセージをクライアントに送信
 
     // メールリストを取得して既存のリストを上書き

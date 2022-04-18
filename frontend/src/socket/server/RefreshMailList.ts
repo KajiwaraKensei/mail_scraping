@@ -56,13 +56,12 @@ async function getMailListSub(n: Page, _: MailingList, socket?: Socket) {
   for (const mail of _) {
     socket &&  socket.emit(
       "process",
-      `メーリングリスト取得中(${++count}/${length}) ${mail.link}`
+      `${mail.mail} (${++count}/${length})`
     ); // 何件目を取得しているかのメッセージをクライアントに送信
 
     // メールリストを取得して既存のリストを上書き
     allList[mail.mail] = await GetEmailList(mail.link)(n);
     mailTimeStamp(mail.mail)
-    console.log(allList[mail.mail]);
   }
   return allList;
 }

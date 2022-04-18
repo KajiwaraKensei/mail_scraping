@@ -21,8 +21,6 @@ export const RefreshEmailAccount = (socket?: Socket) => async (_: string[]) => {
     socket && socket.emit("process", "ログイン中");
     void (await LoginZenlogic()(page));
     socket && socket.emit("process", "メールアカウント取得中");
-    console.log("a");
-    
     const list = await GetEmailAccount(page);
     socket && socket.emit("process", "メールアカウント保存中");
     void (await SaveEmailAccount(list));

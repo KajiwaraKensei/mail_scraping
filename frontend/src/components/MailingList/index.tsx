@@ -27,7 +27,7 @@ import { StoreContext } from "~/pages/_app";
 import useEmailList from "~/hook/useEmailList";
 import useMailingListAddress from "~/hook/useMailingListAddress";
 import useCheckList from "~/hook/useCheckList";
-import { MailingListItem } from "~/util/mailingList/mailingList/GetMailingList";
+import { MailingList, MailingListItem } from "~/util/mailingList/mailingList/GetMailingList";
 import { CSV_Download } from "~/util/CSV_Download";
 import FilterInputComponent from "./FilterInput";
 //_______________________________________________
@@ -37,7 +37,6 @@ const Component: NextPage = () => {
   const { mailingList, loading, fn } = useMailingListAddress();
   const {
     emailList,
-    setEmailList,
     fn: emailFn,
     loading: emailLoading,
   } = useEmailList();
@@ -70,9 +69,12 @@ const Component: NextPage = () => {
 
   // メーリングリスト一覧際読み込み
   const RefreshMailList = async () => {
-    const list = await fn.MailingListRefresh();
-    if (list) {
-      AllRefresh(list)();
+    const list = checkFn.checkData(emailList);
+    if (Object.keys(list).length > 0) {
+      const array = Object.keys(list).map(key => {
+        return mailingList.find((a)=> a.mail === key)
+      }).filter(v => v) as MailingList
+      AllRefresh(array)();
       return;
     }
   };
@@ -104,7 +106,7 @@ const Component: NextPage = () => {
             onChange={checkFn.handleChangeCheckBox(mail.mail)}
             inputProps={{ "aria-label": "primary checkbox" }}
           />
-          <Link href={mail.link}>{mail.mail}</Link>
+          <a href={mail.link} target="noreferrer noopener _blank" >{mail.mail}</a>
           <IconButton disabled={loading.loading} onClick={MailRefresh(mail)}>
             <RefreshIcon fontSize="small" />
           </IconButton>
@@ -135,11 +137,12 @@ const Component: NextPage = () => {
       <Typography variant="h4">メーリングリスト一覧</Typography>
       <ButtonGroup aria-label="outlined button group">
         <Button>
-          <Link href="/transfer-settings">転送設定に切り替え</Link>
+          <Link href="/transfer-settings" >転送設定に切り替え</Link>
         </Button>
         <Button onClick={checkFn.checkAll(Object.keys(emailList))}>
           全てチェック
         </Button>
+        <Button onClick={RefreshMailList}>チェックを更新</Button>
         <Button onClick={handleClickCSV}>CSVにエクスポート</Button>
       </ButtonGroup>
       <FilterInputComponent handleSubmit={emailFn.filterList} />

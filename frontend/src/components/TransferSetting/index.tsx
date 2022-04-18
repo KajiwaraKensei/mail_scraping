@@ -27,7 +27,7 @@ import { StoreContext } from "~/pages/_app";
 import useEmailList from "~/hook/useTransferSetting";
 import useMailingListAddress from "~/hook/useEmailSetting";
 import useCheckList from "~/hook/useCheckList";
-import { MailingListItem } from "~/util/mailingList/transferSetting/GetEmailAccount";
+import { MailingList, MailingListItem } from "~/util/mailingList/transferSetting/GetEmailAccount";
 import { CSV_Download } from "~/util/CSV_Download";
 import FilterInputComponent from "../MailingList/FilterInput";
 
@@ -60,6 +60,27 @@ const TransferSettingComponent: NextPage = () => {
   // メールリスト再読み込み
   const MailRefresh = (mail: MailingListItem) => async () => {
     await emailFn.MailListRefresh([mail])();
+  };
+
+  // 全てのメールリスト再読み込み
+  const AllRefresh =
+  (_mailingList = mailSettings) =>
+  async () => {
+    await emailFn.MailListRefresh(_mailingList)();
+  };
+
+  // メーリングリスト一覧際読み込み
+  const RefreshMailList = async () => {
+    const list = checkFn.checkData(emailList);
+    console.log(list);
+    
+    if (Object.keys(list).length > 0) {
+      const array = Object.keys(list).map(key => {
+        return mailSettings.find((a)=> a.mail === key)
+      }).filter(v => v) as MailingList
+      AllRefresh(array)();
+      return;
+    }
   };
 
   // メールリスト展開
@@ -132,6 +153,7 @@ const TransferSettingComponent: NextPage = () => {
         <Button onClick={checkFn.checkAll(Object.keys(emailList))}>
           全てチェック
         </Button>
+        <Button onClick={RefreshMailList}>チェックを更新</Button>
         <Button onClick={handleClickCSV}>CSVにエクスポート</Button>
       </ButtonGroup>
       <FilterInputComponent handleSubmit={emailFn.filterList} />

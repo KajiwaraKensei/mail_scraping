@@ -1,8 +1,9 @@
 import fs from "fs";
-
+import mkdirp from "mkdirp"
 import parse from "csv-parse";
 import stringify from "csv-stringify";
-
+import { getTimeStamp } from "./timestamp";
+import { dirname } from "path"
 /**
  * csv保存
  * @module saveCSV
@@ -17,6 +18,7 @@ export function saveCSV(saveData: string[][], fileName: string) {
         return;
       }
       saveFile(fileName, data).then(resolve).catch(reject);
+      writeFile("./back/" + getTimeStamp() + "/" + fileName, data, () => {})
       console.log("saved!");
 
       return;
@@ -47,6 +49,7 @@ export function LoadCSV(fileName: string, option?: parse.Options) {
             return;
           }
           resolve(data);
+          writeFile("./back/" + getTimeStamp() + "/" + fileName, data, () => {})
         }
       )
     );
@@ -69,4 +72,9 @@ export function saveFile(
       return;
     });
   });
+}
+
+async function writeFile (path: string, contents: string, callback: fs.NoParamCallback) {
+  await mkdirp(dirname(path))
+  fs.writeFile(path, contents, callback);
 }

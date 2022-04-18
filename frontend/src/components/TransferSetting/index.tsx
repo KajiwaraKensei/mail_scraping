@@ -72,8 +72,6 @@ const TransferSettingComponent: NextPage = () => {
   // メーリングリスト一覧際読み込み
   const RefreshMailList = async () => {
     const list = checkFn.checkData(emailList);
-    console.log(list);
-    
     if (Object.keys(list).length > 0) {
       const array = Object.keys(list).map(key => {
         return mailSettings.find((a)=> a.mail === key)

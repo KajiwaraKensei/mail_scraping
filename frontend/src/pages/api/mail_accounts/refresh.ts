@@ -37,14 +37,13 @@ export default async function handler(
     });
     const list = await RefreshEmailAccount()([])
     await RefreshTransferSetting()(list || [])
-
+    loading = false
   } catch (error) {
     console.log(error);
     res.status(200).send({
       success: false,
       error,
     });
-  }finally{
     loading = false
   }
   return;

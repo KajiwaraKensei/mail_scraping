@@ -8,8 +8,8 @@ import { LoadCSV } from "~/util/csv";
  * メーリングリストを読み込み
  * @module LoadMailingList
  */
-export const LoadMailingList = async (): Promise<MailingList> => {
-  const list = await LoadCSV(MAILING_LIST_CSV, {
+export const LoadMailingList = async (path = MAILING_LIST_CSV): Promise<MailingList> => {
+  const list = await LoadCSV(path, {
     from_line: 2,
   }).catch((err) => {
     console.log(err);

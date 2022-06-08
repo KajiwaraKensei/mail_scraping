@@ -36,3 +36,7 @@ export const loop = (count: number) => {
     [...Array<number>(count)].map(callback);
   };
 };
+
+export const zeroPadding = (length: number, char = '0') => (target: string | number) => {
+  return (Array(length + 1).join(char) + target).slice(-length);
+};

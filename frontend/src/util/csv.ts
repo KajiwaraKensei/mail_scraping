@@ -10,15 +10,15 @@ import { dirname } from "path"
  * @param saveData 保存データ
  * @param fileName 保存ファイル名
  */
-export function saveCSV(saveData: string[][], fileName: string) {
+export function saveCSV(saveData: any, fileName: string, path: string = "./csv") {
   return new Promise<void>((resolve, reject) => {
     stringify(saveData, (error, data) => {
       if (error) {
         reject(error);
         return;
       }
-      saveFile(fileName, data).then(resolve).catch(reject);
-      writeFile("./back/" + getTimeStamp() + "/" + fileName, data, () => {})
+      saveFile(path, fileName, data).then(resolve).catch(reject);
+      saveFile("./back/" + getTimeStamp(), fileName, data + "")
       console.log("saved!");
 
       return;
@@ -33,9 +33,9 @@ export function saveCSV(saveData: string[][], fileName: string) {
  * @param option オプション
  * @returns csvを２次元配列に変換したデータ
  */
-export function LoadCSV(fileName: string, option?: parse.Options) {
+export function LoadCSV(fileName: string, option?: parse.Options, path: string = "./csv") {
   return new Promise<string[][]>((resolve, reject) => {
-    const stream = fs.createReadStream(fileName);
+    const stream = fs.createReadStream(path + "/" + fileName);
     stream.on("error", reject);
     stream.pipe(
       parse(
@@ -49,7 +49,7 @@ export function LoadCSV(fileName: string, option?: parse.Options) {
             return;
           }
           resolve(data);
-          writeFile("./back/" + getTimeStamp() + "/" + fileName, data, () => {})
+          saveFile("./back/" + getTimeStamp(), fileName, data + "")
         }
       )
     );
@@ -63,18 +63,23 @@ export function LoadCSV(fileName: string, option?: parse.Options) {
  * @param data 保存データ
  */
 export function saveFile(
+  path: string,
   fileName: string,
   data: string | NodeJS.ArrayBufferView
 ) {
   return new Promise<void>((resolve, reject) => {
-    fs.writeFile(fileName, data, (error) => {
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path)
+    }
+    fs.writeFile(path + "/" + fileName, data, (error) => {
       error ? reject(error) : resolve();
       return;
     });
+
   });
 }
 
-async function writeFile (path: string, contents: string, callback: fs.NoParamCallback) {
+async function writeFile(path: string, contents: string, callback: fs.NoParamCallback) {
   await mkdirp(dirname(path))
   fs.writeFile(path, contents, callback);
 }

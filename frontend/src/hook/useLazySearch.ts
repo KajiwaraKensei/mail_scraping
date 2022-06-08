@@ -14,6 +14,8 @@ import { useInput } from './useInput'
 // メイン
 let count = -999
 let word = ""
+const INTARTVAL = 500
+const MAX_COUNT = 2
 
 export const useLazySearch = <T>(submitEvent: (keyword: string) => T) => {
   const { value, onChange } = useInput()
@@ -23,7 +25,7 @@ export const useLazySearch = <T>(submitEvent: (keyword: string) => T) => {
   }
 
   const start =() => {
-    count = 3
+    count = MAX_COUNT
     interval()
   }
 
@@ -36,7 +38,7 @@ export const useLazySearch = <T>(submitEvent: (keyword: string) => T) => {
     setTimeout(() => {
       count -= 1
       interval()
-    }, 500)
+    }, INTARTVAL)
   }
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export const useLazySearch = <T>(submitEvent: (keyword: string) => T) => {
     if(count === -999){
       start()
     }else{
-      count = 3
+      count = MAX_COUNT
     }
     word = value
   }, [value])

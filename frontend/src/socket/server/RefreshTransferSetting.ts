@@ -33,6 +33,7 @@ const RefreshTransferSetting = (socket?: Socket) => async (_: MailingList) => {
     socket && socket.emit("error", error);
   } finally {
     page.close();
+    browser.close();
     socket && socket.disconnect();
   }
   return;

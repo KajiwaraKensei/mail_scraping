@@ -14,28 +14,36 @@ import { SetTimeStamp } from "./timestamp/SetTimeStamp";
 export const MailingList = async (): Promise<void> => {
   const browser = await Puppeteer.launch();
   const page = await browser.newPage();
+  try{
+    let mailingList = await LoadMailingList();
 
-  let mailingList = await LoadMailingList();
+    await LoginZenlogic()(page); // ログイン
 
-  await LoginZenlogic()(page); // ログイン
+    if (!mailingList.length) {
+      mailingList = await GetMailingList(page); // メーリングリスト一覧を取得
+      SetTimeStamp("mailing_list")("*")
+    }
 
-  if (!mailingList.length) {
-    mailingList = await GetMailingList(page); // メーリングリスト一覧を取得
-    SetTimeStamp("mailing_list")("*")
+    void SaveMailingList(mailingList);
+
+    const mailTimeStamp = SetTimeStamp("mail")
+    const result: { [s: string]: EmailList } = {};
+    for (const mail of mailingList) {
+      result[mail.mail] = await GetEmailList(mail.link)(page);
+      mailTimeStamp(mail.mail)
+    }
+    void SaveEmailList(result);
+
+    Object.keys(result).forEach((key) => {
+      console.table(result[key]);
+    });
+
+  } catch (error) {
+    // エラー処理
+    console.log(error);
+  } finally {
+    page.close();
+    browser.close();
   }
-
-  void SaveMailingList(mailingList);
-
-  const mailTimeStamp = SetTimeStamp("mail")
-  const result: { [s: string]: EmailList } = {};
-  for (const mail of mailingList) {
-    result[mail.mail] = await GetEmailList(mail.link)(page);
-    mailTimeStamp(mail.mail)
-  }
-  void SaveEmailList(result);
-
-  Object.keys(result).forEach((key) => {
-    console.table(result[key]);
-  });
   return;
 };

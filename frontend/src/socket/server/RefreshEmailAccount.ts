@@ -28,10 +28,13 @@ export const RefreshEmailAccount = (socket?: Socket) => async (_: string[]) => {
     socket && socket.disconnect();
     return list
   } catch (error) {
+    // エラー処理
     console.log(error);
+    socket && socket.emit("error", error);
   } finally {
+    page.close();
     browser.close();
+    socket && socket.disconnect();
   }
-};
-
+}
 export default RefreshEmailAccount;

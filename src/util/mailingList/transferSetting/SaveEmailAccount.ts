@@ -2,7 +2,7 @@
 // メーリングリスト保存
 import { MailingList } from "./GetEmailAccount";
 import { saveCSV } from "~/util/csv";
-import {MAIL_ACCOUNT_CSV} from "~/conf/mailingList"
+import { MAIL_ACCOUNT_CSV } from "~/conf/mailingList"
 const FILE_NAME = MAIL_ACCOUNT_CSV;
 
 /**

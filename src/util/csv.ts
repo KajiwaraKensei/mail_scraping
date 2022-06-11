@@ -22,7 +22,7 @@ export function saveCSV(
         return;
       }
       saveFile(path, fileName, data).then(resolve).catch(reject);
-      saveFile("./back/" + getTimeStamp(), fileName, data + "");
+      saveFile("./back/" + getTimeStamp(), fileName, data);
       console.log("saved!");
 
       return;
@@ -61,7 +61,8 @@ export function LoadCSV(
             return;
           }
           resolve(data);
-          saveFile("./back/" + getTimeStamp(), fileName, data + "");
+
+          saveCSV([["head"], ...data], fileName, "./back/" + getTimeStamp(),);
         }
       )
     );

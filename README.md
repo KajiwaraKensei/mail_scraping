@@ -12,7 +12,7 @@
 
 ## 使用方法
 
-*.env.example* を参考に *./frontend* に *.env* ファイルを作成
+*.env.example* を参考に *.env* ファイルを作成
 ```bash
 cd frontend
 yarn
